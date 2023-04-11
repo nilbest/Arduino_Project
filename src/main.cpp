@@ -11,6 +11,17 @@ HX711 P1("P1",11,4,32,true);
 HX711 P2("P2",12,6,32,true);
 HX711 P3("P3",13,8,32,true);
 multi_HX711 All_HX711("All_HX711", 10, 32);
+#include <FlowSensor.h>
+
+
+// pin -> interrupt pin
+FlowSensor Sensor(YFS201, 2); //2=>D2
+unsigned long timebefore = 0; // Same type as millis()
+
+
+void count(){
+  Sensor.count();
+}
 
 long Loop_counter = 0;
 
@@ -21,6 +32,7 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
   Serial.begin(115200);
+<<<<<<< HEAD
   delay(500);
 
   //Setup LCD 20x4
@@ -106,3 +118,24 @@ void loop() {
 
   delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
 }
+=======
+  Sensor.begin(count);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+    if (millis() - timebefore >= 1000) //1000 = 1sec
+  {
+    Sensor.read();// calibrate = Number in read() [_numpuls+calibrate]
+    Serial.print("Flow rate (L/min) : ");
+    Serial.print(Sensor.getFlowRate_m());
+    Serial.print("\tTotal Pulse count: ");
+    Serial.print(Sensor.getPulse());
+    Serial.print("\tMillis: ");
+    Serial.print(millis());
+    Serial.print("\tTime Before: ");
+    Serial.println(timebefore);
+    timebefore = millis();
+  }
+}
+>>>>>>> 3e8737c (Added Test Serial Out's for better Messerment of the output Data; Next is a Test of the ouput Data)
