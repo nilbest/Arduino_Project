@@ -3,14 +3,6 @@
 #include "timerISR.h"
 
 
-// Define timer compare match value
-//int timer1_compare_match;
-
-
-
-
-
-
 void setTimerISR(){
     //START TIMER SETUP
     // Disable all interrupts
@@ -35,4 +27,4 @@ void setTimerISR(){
 
   // Enable all interrupts
   interrupts();
-}
+};

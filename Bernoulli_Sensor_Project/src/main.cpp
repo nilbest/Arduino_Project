@@ -1,5 +1,11 @@
+//Include Libraries
 #include <Arduino.h>
+
+//Include Own Code-Snippets
 #include "timerISR.h"
+
+
+
 
 // Define LED Pin
 #define ledPin  13
@@ -15,6 +21,8 @@ ISR(TIMER1_COMPA_vect){
   // Write opposite value to LED
   digitalWrite(ledPin, digitalRead(ledPin)^1);
 }
+
+
 
 
 void setup() {
