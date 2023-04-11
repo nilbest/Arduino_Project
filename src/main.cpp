@@ -32,7 +32,6 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
   Serial.begin(115200);
-<<<<<<< HEAD
   delay(500);
 
   //Setup LCD 20x4
@@ -80,6 +79,9 @@ void setup() {
   Serial.println("\n\n\n");
   delay(500);
   Serial.print("________Start________");
+
+  //Flow Sensor
+  Sensor.begin(count);
 }
 
 void loop() {
@@ -87,6 +89,22 @@ void loop() {
   Serial.print("\n\nMessung ");
   Serial.print(Loop_counter);
   //Reading Pressure Sensors
+
+  // put your main code here, to run repeatedly:
+    if (millis() - timebefore >= 1000) //1000 = 1sec
+  {
+    Sensor.read();// calibrate = Number in read() [_numpuls+calibrate]
+    Serial.print("Flow rate (L/min) : ");
+    Serial.print(Sensor.getFlowRate_m());
+    Serial.print("\tTotal Pulse count: ");
+    Serial.print(Sensor.getPulse());
+    Serial.print("\tMillis: ");
+    Serial.print(millis());
+    Serial.print("\tTime Before: ");
+    Serial.println(timebefore);
+    timebefore = millis();
+  }
+
 
   
   All_HX711.read();
@@ -118,24 +136,5 @@ void loop() {
 
   delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
 }
-=======
-  Sensor.begin(count);
-}
 
-void loop() {
-  // put your main code here, to run repeatedly:
-    if (millis() - timebefore >= 1000) //1000 = 1sec
-  {
-    Sensor.read();// calibrate = Number in read() [_numpuls+calibrate]
-    Serial.print("Flow rate (L/min) : ");
-    Serial.print(Sensor.getFlowRate_m());
-    Serial.print("\tTotal Pulse count: ");
-    Serial.print(Sensor.getPulse());
-    Serial.print("\tMillis: ");
-    Serial.print(millis());
-    Serial.print("\tTime Before: ");
-    Serial.println(timebefore);
-    timebefore = millis();
-  }
-}
->>>>>>> 3e8737c (Added Test Serial Out's for better Messerment of the output Data; Next is a Test of the ouput Data)
+
