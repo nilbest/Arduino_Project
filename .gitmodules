@@ -1,0 +1,3 @@
+[submodule "FlowSensor-Arduino"]
+	path = FlowSensor-Arduino
+	url = https://github.com/nilbest/FlowSensor-Arduino.git
