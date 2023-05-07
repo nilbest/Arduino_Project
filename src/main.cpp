@@ -1,8 +1,10 @@
 //Include Libraries
 #include <Arduino.h>
 
+//#include"PressureSensor.h"
+
 //Include Own Code-Snippets
-#include "timerISR.h"
+//#include "timerISR.h"
 
 //#include "FlowSensor.h"
 
@@ -12,7 +14,9 @@
 
 // Define LED Pin
 #define ledPin  13
-
+  int SensorData=0;
+  const int analogPin = A0;
+/*
 // Define timer compare match value
 int timer1_compare_match;
 
@@ -25,19 +29,29 @@ ISR(TIMER1_COMPA_vect){
   digitalWrite(ledPin, digitalRead(ledPin)^1);
 }
 
-
+*/
 
 
 void setup() {
   // put your setup code here, to run once:
-
+  /*
   // Set LED as outupt
   pinMode(ledPin, OUTPUT);	
   
 
  void setTimerISR();
+  */
+  Serial.begin(115200);
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  
+  SensorData=analogRead(analogPin);
+  Serial.print("Gemessene Spannung:\t ");
+  Serial.println(SensorData);
+  delay(100);
+  
+ 
 }
