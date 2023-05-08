@@ -3,13 +3,27 @@
 
 #include "Arduino.h"
 
+
+
 const int analogPin = A0;
 const int inputResolution = 1023;
-int PressureData=0;
+const int maxVoltIn = 5;
+
+//Used if not made in Classes
+extern int SensorValue;
+extern float voltageSensor;
 
 
-void readPressure();
-int getPressure();
+void readSensor();
+void getVoltageSensor();
+
+float getPressure();
+
+
+
+
+
+
 
 
 #endif
