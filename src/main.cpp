@@ -98,10 +98,12 @@ void loop() {
     Serial.print(Sensor.getFlowRate_m());
     Serial.print("\tTotal Pulse count: ");
     Serial.print(Sensor.getPulse());
-    Serial.print("\tMillis: ");
+    Serial.print("\t\tMillis: ");
     Serial.print(millis());
     Serial.print("\tTime Before: ");
-    Serial.println(timebefore);
+    Serial.print(timebefore);
+    Serial.print("\tLitter: ");
+    Serial.println(Sensor.getVolume());
     timebefore = millis();
   }
 
