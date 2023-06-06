@@ -24,9 +24,9 @@ void loop() {
     if (millis() - timebefore >= 1000) //1000 = 1sec
   {
     Sensor.read();// calibrate = Number in read() [_numpuls+calibrate]
-    Serial.print("Flow rate (L/min) : ");
+    Serial.print("Flow (L/min) : ");
     Serial.print(Sensor.getFlowRate_m());
-    Serial.print("\tTotal Pulse count: ");
+    Serial.print("\tAll Puls count: ");
     Serial.print(Sensor.getPulse());
     /*Serial.print("\t\tMillis: ");
     Serial.print(millis());
@@ -34,6 +34,8 @@ void loop() {
     Serial.print(timebefore);*/
     Serial.print("\tFl sec: ");
     Serial.print(Sensor.getFlowRate_s());
+    Serial.print("\tFlow/min Simple: ");
+    Serial.print(Sensor.getFlowRate_m_simple());
     Serial.print("\tLitter: ");
     Serial.println(Sensor.getVolume());
     timebefore = millis();
