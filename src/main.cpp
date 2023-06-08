@@ -1,17 +1,18 @@
 //Include Libraries
 #include <Arduino.h>
+#include <FlowSensor.h>
+#include <LiquidCrystal.h>
 #include "PressureSensor.h"
 #include "Multi_PressureSensor.h"
 #include "MyUtilities.h"
 
-#include <LiquidCrystal.h>
 
 // Pins am Arduino für HX711
 HX711 P1("P1",11,4,32,true);
 HX711 P2("P2",12,6,32,true);
 HX711 P3("P3",13,8,32,true);
 multi_HX711 All_HX711("All_HX711", 10, 32);
-#include <FlowSensor.h>
+
 
 
 // pin -> interrupt pin
@@ -105,7 +106,7 @@ void loop() {
     Serial.print("\tFl sec: ");
     Serial.print(Sensor.getFlowRate_s());
     Serial.print("\tFlow/min Simple: ");
-    Serial.print(Sensor.getFlowRate_m_simple());
+    //Serial.print(Sensor.getFlowRate_m_simple());
     Serial.print("\tLitter: ");
     Serial.println(Sensor.getVolume());
     timebefore = millis();
