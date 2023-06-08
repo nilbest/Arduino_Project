@@ -34,8 +34,8 @@ void loop() {
     Serial.print(timebefore);*/
     Serial.print("\tFl sec: ");
     Serial.print(Sensor.getFlowRate_s());
-    Serial.print("\tFlow/min Simple: ");
-    Serial.print(Sensor.getFlowRate_m_simple());
+    /*Serial.print("\tFlow/min Simple: ");
+    Serial.print(Sensor.getFlowRate_m_simple());*/
     Serial.print("\tLitter: ");
     Serial.println(Sensor.getVolume());
     timebefore = millis();
