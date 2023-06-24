@@ -1,4 +1,7 @@
 [submodule "FlowSensor-Arduino"]
 	path = lib/FlowSensor-Arduino
 	url = https://github.com/nilbest/FlowSensor-Arduino.git
-	
+		
+[submodule "lib/HX711-multi"]
+	path = lib/HX711-multi
+	url = https://github.com/nilbest/HX711-multi.git
