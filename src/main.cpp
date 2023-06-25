@@ -3,46 +3,36 @@
 
 //#include"PressureSensor.h"
 
-#include "HX711-multi.h"
+#include "HX711.h"
 
-#define CLK 7      // clock pin to the load cell amp
-#define DOUT1 A1    // data pin to the first
-#define DOUT2 A2    // data pin to the second
-#define DOUT3 A3    // data pin to the third
+const int LOADCELL_DOUT_PIN = 2;
+const int LOADCELL_SCK_PIN = 3;
 
-
-byte DOUTS[3] = {DOUT1, DOUT2, DOUT3};
-
-#define CHANNEL_COUNT sizeof(DOUTS)/sizeof(byte) //
-
-long int results[CHANNEL_COUNT];
-
-HX711MULTI scales(CHANNEL_COUNT, DOUTS, CLK);  //Error by using it
-
-/*
-void sendRawData() {
-  scales.read(results);
-  for (int i=0; i<scales.get_count(); ++i) {;
-    Serial.print( -results[i]);  
-    Serial.print( (i!=scales.get_count()-1)?"\t":"\n");
-  }  
-  delay(10);
-}
-*/
+HX711 scale;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial.println("Serial initialization");
-  pinMode(CLK,OUTPUT);
-
+  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN, 128);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.println("Test");
-  //sendRawData();
+  //Serial.println("Test");
+  Serial.println(scale.is_ready());
+  if (scale.is_ready()) {
+    long reading = scale.read();
+    Serial.print("HX711 reading: ");
+    Serial.print(reading);
+    Serial.print("\tAverage: ");
+    long average = (scale.read_average()); 
+    Serial.println(average);
+  } else {
+    Serial.println("HX711 not found.");
+  }
 
+  delay(1000);
 }
 
 
