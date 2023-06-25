@@ -6,7 +6,7 @@
 #include "HX711-multi.h"
 
 #define CLK 7      // clock pin to the load cell amp
-#define DOUT1 6    // data pin to the first
+#define DOUT1 A1    // data pin to the first
 #define DOUT2 A2    // data pin to the second
 #define DOUT3 A3    // data pin to the third
 
@@ -17,7 +17,8 @@ byte DOUTS[3] = {DOUT1, DOUT2, DOUT3};
 
 long int results[CHANNEL_COUNT];
 
-//HX711MULTI scales(CHANNEL_COUNT, DOUTS, CLK);
+HX711MULTI scales(CHANNEL_COUNT, DOUTS, CLK);  //Error by using it
+
 /*
 void sendRawData() {
   scales.read(results);
