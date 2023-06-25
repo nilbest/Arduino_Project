@@ -5,12 +5,11 @@
 
 #include "HX711-multi.h"
 
-#define CLK A0      // clock pin to the load cell amp
-#define DOUT1 A1    // data pin to the first
+#define CLK 7      // clock pin to the load cell amp
+#define DOUT1 6    // data pin to the first
 #define DOUT2 A2    // data pin to the second
 #define DOUT3 A3    // data pin to the third
 
-void sendRawData();
 
 byte DOUTS[3] = {DOUT1, DOUT2, DOUT3};
 
@@ -18,25 +17,8 @@ byte DOUTS[3] = {DOUT1, DOUT2, DOUT3};
 
 long int results[CHANNEL_COUNT];
 
-HX711MULTI scales(CHANNEL_COUNT, DOUTS, CLK);
-
-
-void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(115200);
-  pinMode(11,OUTPUT);
-
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-   sendRawData();
-
-}
-
-
-
-
+//HX711MULTI scales(CHANNEL_COUNT, DOUTS, CLK);
+/*
 void sendRawData() {
   scales.read(results);
   for (int i=0; i<scales.get_count(); ++i) {;
@@ -45,3 +27,23 @@ void sendRawData() {
   }  
   delay(10);
 }
+*/
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  Serial.println("Serial initialization");
+  pinMode(CLK,OUTPUT);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  Serial.println("Test");
+  //sendRawData();
+
+}
+
+
+
+
