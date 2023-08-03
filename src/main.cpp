@@ -32,6 +32,7 @@ void loop() {
     Serial.println("HX711 not found.");
   }
 
+  
   delay(1000);
 }
 
