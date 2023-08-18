@@ -25,12 +25,20 @@ class HX711
         int SCK_PIN;        // SCK pin am Arduino
         float SCALE_FACTOR; // Skalierungsfaktor zur Umrechnung in Druckwerte
         float OFFSET;       // Offset-Korrektur (falls nötig)
-        
 
         long rawValue;
         float voltage;
         float pressure_psi;
         float pressure_kpa;
+
+        //Referenzpunkte für lineare Interpolation
+        float U_1PSI = 0.03;    //30mV
+        float U_5_8PSI = 0.075; //75mV
+        float P_1PSI = 1.0;
+        float P_5_8PSI = 5.8;
+
+        float slope;
+        float yIntercept;
 
     public:
         HX711(String name, int dout, int sck);
@@ -43,6 +51,7 @@ class HX711
         void set_OFFSET(float new_Offset);
 
         //Interne Funktionen
+        void set_slope_and_yIntercept();
         void set_voltage();
         void set_pressure_psi();
         void set_pressure_kpa();

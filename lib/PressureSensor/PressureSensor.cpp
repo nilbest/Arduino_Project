@@ -18,6 +18,7 @@ void HX711::setup(){
     //Calls the pinMode 
     pinMode(this->DOUT_PIN, INPUT);
     pinMode(this->SCK_PIN, OUTPUT);
+    set_slope_and_yIntercept();
     Serial.print(this->name+" HX711 finished setup\n");
 }
 
@@ -64,8 +65,16 @@ void HX711::set_voltage(){
 
 void HX711::set_pressure_psi(){
     float pressure_psi;
+
+    
+    //via Point Kalibration
     pressure_psi = (this->voltage - 0.5) * (100.0 / 4.0);
     pressure_psi = (pressure_psi * this->SCALE_FACTOR) + this->OFFSET;
+    
+
+    //via Linear Interpolation
+    //pressure_psi= (voltage - yIntercept) / slope;
+
     this->pressure_psi=pressure_psi;
 };
 
@@ -76,6 +85,10 @@ void HX711::set_pressure_kpa(){
     this->pressure_kpa=pressure_kpa;
 };
 
+void HX711::set_slope_and_yIntercept(){
+    this->slope = (this->U_5_8PSI - this->U_1PSI) / (this->P_5_8PSI - this->P_1PSI);
+    this->yIntercept = this->U_1PSI - this->slope * this->P_1PSI;
+}
 
 
 void HX711::printTest(){
@@ -97,6 +110,6 @@ void HX711::printTest(){
 };
 
 void HX711::printData(){
-    Serial.print(pressure_kpa, 2);
+    Serial.print(this->pressure_kpa, 2);
     Serial.print(" kPa");
 };
