@@ -3,6 +3,3 @@
 	url = https://github.com/nilbest/FlowSensor-Arduino.git
 		
 
-[submodule "lib/HX711"]
-	path = lib/HX711
-	url = https://github.com/nilbest/HX711.git
