@@ -5,7 +5,7 @@
 
 
 /*
-Achtung Sensoren müssen nocj kalibriert werden!!!
+Achtung Sensoren müssen noch kalibriert werden!!!
 
 Druck (Einheit) = (Rohwert - Rohwert_min) * (Druck_max - Druck_min) / (Rohwert_max - Rohwert_min) + Druck_min
 Rohwert ist der vom HX711 ausgelesene Rohwert.
