@@ -27,9 +27,11 @@ class HX711
         float OFFSET;       // Offset-Korrektur (falls nötig)
 
         long rawValue;
+        long OFFSET_RAW;
         float voltage;
         float pressure_psi;
         float pressure_kpa;
+        float pressure_mmHg;
 
         //Referenzpunkte für lineare Interpolation
         float U_1PSI = 0.03;    //30mV
@@ -55,6 +57,9 @@ class HX711
         void set_voltage();
         void set_pressure_psi();
         void set_pressure_kpa();
+        void set_pressure_mmHg();
+
+        int countDigitsBeforeDecimal(float value);
 
         void printTest();
         void printData();

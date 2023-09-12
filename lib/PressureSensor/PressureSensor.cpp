@@ -8,6 +8,7 @@ HX711::HX711(String name, int dout, int sck){
     this->SCK_PIN=sck;
     this->SCALE_FACTOR = 1.0;
     this->OFFSET= 0.0;
+    this->OFFSET_RAW=-80000000;
     Serial.println(this->name+" as HX711 initialized");
 }
 
@@ -53,9 +54,10 @@ void HX711::read() {
   
    this->rawValue=value;
    set_voltage();
+   set_pressure_mmHg();
    set_pressure_psi();
    set_pressure_kpa();
-   Serial.println(this->name+" finished Reading");
+   //Serial.println(this->name+" finished Reading");
 }
 
 
@@ -66,12 +68,10 @@ void HX711::set_voltage(){
 void HX711::set_pressure_psi(){
     float pressure_psi;
 
-    
     //via Point Kalibration
     pressure_psi = (this->voltage - 0.5) * (100.0 / 4.0);
     pressure_psi = (pressure_psi * this->SCALE_FACTOR) + this->OFFSET;
     
-
     //via Linear Interpolation
     //pressure_psi= (voltage - yIntercept) / slope;
 
@@ -85,21 +85,61 @@ void HX711::set_pressure_kpa(){
     this->pressure_kpa=pressure_kpa;
 };
 
+void HX711::set_pressure_mmHg(){
+    float pressure_mmHg;
+    pressure_mmHg = (this->voltage - 0.5) * (100.0 / 4.0);
+    pressure_mmHg = (pressure_mmHg * this->SCALE_FACTOR) + this->OFFSET;
+    this->pressure_mmHg = pressure_mmHg;
+};
+
+
 void HX711::set_slope_and_yIntercept(){
     this->slope = (this->U_5_8PSI - this->U_1PSI) / (this->P_5_8PSI - this->P_1PSI);
     this->yIntercept = this->U_1PSI - this->slope * this->P_1PSI;
-}
+};
 
 
 void HX711::printTest(){
-    Serial.println(this->name);
+    //Serial.println(this->name);
     Serial.print("Rohwert: ");
-    Serial.print(this->rawValue);
-  
+
+    int num_digits = 1; // Mindestens eine Stelle für den Rohwert
+
+    // Berechnen Sie die Anzahl der Stellen im Rohwert
+    long tempValue = this->rawValue;
+    if (tempValue < 0) {
+        tempValue = -tempValue; // Negative Werte behandeln
+    };
+
+    while (tempValue >= 10) {
+        tempValue /= 10;
+        num_digits++;
+    };
+
+    // Füllen Sie die verbleibenden Zeichen mit Leerzeichen auf, um rechtsbündige Ausgabe zu erreichen
+    int max_width = 10; // Maximale Breite für die Ausgabe (anpassbar)
+    for (int i = num_digits; i < max_width; i++) {
+        Serial.print(" ");
+    };
+
+    // Ausgabe des Rohwerts
+    Serial.print(this->rawValue, DEC);
+
+    //Serial.print(this->rawValue, DEC);
+    //Serial.println();
+    //Serial.print("\t");
+    /*
     Serial.print(", Spannung: ");
     Serial.print(this->voltage, 4);
     Serial.print(" V");
-
+    */
+    Serial.print(", Druck (mmHg): ");
+    for ( int i = countDigitsBeforeDecimal(this->pressure_mmHg) ; i<4;i++){
+        Serial.print(" ");
+    }
+    Serial.print(this->pressure_mmHg, 2);
+    Serial.print(" mmHg");
+    /*
     Serial.print(", Druck (PSI): ");
     Serial.print(this->pressure_psi, 2);
     Serial.print(" PSI");
@@ -107,9 +147,23 @@ void HX711::printTest(){
     Serial.print(", Druck (kPa): ");
     Serial.print(this->pressure_kpa, 2);
     Serial.println(" kPa");
+    */
 };
 
 void HX711::printData(){
     Serial.print(this->pressure_kpa, 2);
     Serial.print(" kPa");
 };
+
+
+int HX711::countDigitsBeforeDecimal(float value){
+    int intValue = (int)value; // Ganzzahliger Teil extrahieren
+    int digitCount = 1; // Mindestens eine Ziffer
+
+    while (intValue >= 10) {
+        intValue /= 10;
+        digitCount++;
+    }
+
+    return digitCount;
+}
