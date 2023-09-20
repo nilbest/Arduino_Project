@@ -37,18 +37,21 @@ void HX711::read() {
   byte data[3] = {0};
   
   while (digitalRead(this->DOUT_PIN));  // Warte, bis DOUT auf LOW geht
+
+  // Lesen der Rohdaten
   for (int i = 0; i < 3; ++i) {
     for (int j = 7; j >= 0; --j) {
       digitalWrite(SCK_PIN, HIGH);
-      bitWrite(data[i], j, digitalRead(this->DOUT_PIN));
+      bitWrite(data[i], j, digitalRead(this->DOUT_PIN)); // Einfügen der gelesenen 3 Bits
       digitalWrite(this->SCK_PIN, LOW);
     }
   }
   
+  // HX711 auf standby setzen / in den Leerzustand
   digitalWrite(this->SCK_PIN, HIGH);
   digitalWrite(this->SCK_PIN, LOW);
   
-  // Setze den ADC-Wandler in den Leerzustand
+ 
   data[2] ^= 0x80;
   value = (static_cast<long>(data[2]) << 16) | (static_cast<long>(data[1]) << 8) | data[0];
   
@@ -62,7 +65,9 @@ void HX711::read() {
 
 
 void HX711::set_voltage(){
-    this->voltage = (this->rawValue * 5.0) / static_cast<float>(0x7FFFFF);
+    //4.63V Versorgung
+    this->voltage = (this->rawValue/pow(2,24))*(4.91/128); //for mV *1000
+    //this->voltage = (this->rawValue * 4.91) / static_cast<float>(0x7FFFFF);
 }
 
 void HX711::set_pressure_psi(){
@@ -128,11 +133,14 @@ void HX711::printTest(){
     //Serial.print(this->rawValue, DEC);
     //Serial.println();
     //Serial.print("\t");
-    /*
+    
     Serial.print(", Spannung: ");
+    for ( int i = countDigitsBeforeDecimal(this->voltage) ; i<4;i++){
+        Serial.print(" ");
+    }
     Serial.print(this->voltage, 4);
     Serial.print(" V");
-    */
+    
     Serial.print(", Druck (mmHg): ");
     for ( int i = countDigitsBeforeDecimal(this->pressure_mmHg) ; i<4;i++){
         Serial.print(" ");
