@@ -25,8 +25,6 @@ class HX711
         int SCK_PIN;        // SCK pin am Arduino
         float SCALE_FACTOR; // Skalierungsfaktor zur Umrechnung in Druckwerte
         float OFFSET;       // Offset-Korrektur (falls nötig)
-        int gain;
-        byte GAIN;
 
         long rawValue;
         long OFFSET_RAW;
@@ -45,7 +43,7 @@ class HX711
         float yIntercept;
 
     public:
-        HX711(String name, int dout, int sck, byte gain = 128);
+        HX711(String name, int dout, int sck);
         virtual ~HX711();
 
         void setup();
@@ -53,8 +51,6 @@ class HX711
 
         void set_SCALE_FACTOR(float new_Scale_Factor);
         void set_OFFSET(float new_Offset);
-        void set_gain(byte gain = 128);
-
 
         //Interne Funktionen
         void set_slope_and_yIntercept();
@@ -64,9 +60,9 @@ class HX711
         void set_pressure_mmHg();
 
         int countDigitsBeforeDecimal(float value);
+
         void printTest();
         void printData();
-        void print_Data_Test(uint8_t data[3]);
 
 };
 

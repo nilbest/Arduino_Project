@@ -3,7 +3,7 @@
 #include "PressureSensor.h"
 
 // Pins am Arduino für HX711
-HX711 P1("P1",2,3);
+HX711 P1("P1",2,3,32);
 /*
 HX711 P2("P2",4,5);
 HX711 P3("P3",6,7);
@@ -48,5 +48,5 @@ void loop() {
   P2.printTest();
   P3.printTest();
   */
-  delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
+  delay(2000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
 }

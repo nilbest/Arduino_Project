@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "PressureSensor.h"
 
-HX711::HX711(String name, int dout, int sck, byte gain){
+HX711::HX711(String name, int dout, int sck){
     //Safes the HX711 Class with the Pin Config
     this->name = name;
     this->DOUT_PIN=dout;
@@ -9,8 +9,6 @@ HX711::HX711(String name, int dout, int sck, byte gain){
     this->SCALE_FACTOR = 1.0;
     this->OFFSET= 0.0;
     this->OFFSET_RAW=-80000000;
-    this->gain= gain;
-    set_gain(gain);
     Serial.println(this->name+" as HX711 initialized");
 }
 
@@ -33,62 +31,13 @@ void HX711::set_OFFSET(float new_Offset){
     this->OFFSET=new_Offset;
 };
 
-void HX711::set_gain(byte gain) {
-	switch (gain) {
-		case 128:		// channel A, gain factor 128
-			this->GAIN = 1;
-			break;
-		case 64:		// channel A, gain factor 64
-			this->GAIN = 3;
-			break;
-		case 32:		// channel B, gain factor 32
-			this->GAIN = 2;
-			break;
-	};
-};
 
 void HX711::read() {
   long value = 0;
-  //byte data[3] = {0};
-  uint8_t data[3] = {0};
-  uint8_t filler = 0x00;
+  byte data[3] = {0};
   
   while (digitalRead(this->DOUT_PIN));  // Warte, bis DOUT auf LOW geht
 
-  // Pulse the clock pin 24 times to read the data.
-  /*for (int i = 2; i >= 0; i--) {
-    data[i] = shiftIn(DOUT_PIN, SCK_PIN, MSBFIRST);
-  }
-  */
-  for (int i = 2; i >= 0; i--) {
-    int count=0;
-    for (int j = 7; j >= 0; j--) { //Schleife von 7 bis 0 (8lang) beginnt mit dem MSB
-      digitalWrite(SCK_PIN, HIGH); // Setze die Taktleitung auf HIGH
-      bitWrite(data[i], j, digitalRead(this->DOUT_PIN)); // Einfügen des gelesenen Bits
-      digitalWrite(SCK_PIN, LOW); // Setze die Taktleitung auf LOW
-      count ++;
-      //Serial.print(j);
-    }
-    /*
-    // Debugging-Ausgabe: Anzahl der Taktimpulse nach jedem Byte
-    Serial.print(" |Taktimpulse nach Byte ");
-    Serial.print(2 - i); // 2, 1, 0
-    Serial.print(": ");
-    Serial.println(count); // Insgesamt 8 Taktimpulse pro Byte
-    */
-  }
-
-
- //Serial.println();
-    print_Data_Test(data);
-
-  // Zusätzliche SCK-Impulse entsprechend dem ausgewählten Gain hinzufügen
-  for (int i = 0; i < this->GAIN; i++) {
-    digitalWrite(this->SCK_PIN, HIGH);
-    digitalWrite(this->SCK_PIN, LOW);
-  }
-
-/*
   // Lesen der Rohdaten
   for (int i = 0; i < 3; ++i) {
     for (int j = 7; j >= 0; --j) {
@@ -98,33 +47,14 @@ void HX711::read() {
     }
   }
   
-  // Zusätzliche SCK-Impulse entsprechend dem ausgewählten Gain hinzufügen
-  for (int i = 0; i < this->GAIN; ++i) {
-    digitalWrite(this->SCK_PIN, HIGH);
-    digitalWrite(this->SCK_PIN, LOW);
-  }
-*/
-
   // HX711 auf standby setzen / in den Leerzustand
   digitalWrite(this->SCK_PIN, HIGH);
   digitalWrite(this->SCK_PIN, LOW);
   
-// Replicate the most significant bit to pad out a 32-bit signed integer
-	if (data[2] & 0x80) {
-		filler = 0xFF;
-	} else {
-		filler = 0x00;
-	}
-
-	// Construct a 32-bit signed integer
-	value = ( static_cast<unsigned long>(filler) << 24
-			| static_cast<unsigned long>(data[2]) << 16
-			| static_cast<unsigned long>(data[1]) << 8
-			| static_cast<unsigned long>(data[0]) );
- /*
+ 
   data[2] ^= 0x80;
   value = (static_cast<long>(data[2]) << 16) | (static_cast<long>(data[1]) << 8) | data[0];
-*/
+  
    this->rawValue=value;
    set_voltage();
    set_pressure_mmHg();
@@ -136,7 +66,7 @@ void HX711::read() {
 
 void HX711::set_voltage(){
     //4.63V Versorgung
-    this->voltage = (this->rawValue/pow(2,24))*(4.91/this->gain); //for mV *1000
+    this->voltage = (this->rawValue/pow(2,24))*(4.91/128); //for mV *1000
     //this->voltage = (this->rawValue * 4.91) / static_cast<float>(0x7FFFFF);
 }
 
@@ -172,9 +102,6 @@ void HX711::set_slope_and_yIntercept(){
     this->slope = (this->U_5_8PSI - this->U_1PSI) / (this->P_5_8PSI - this->P_1PSI);
     this->yIntercept = this->U_1PSI - this->slope * this->P_1PSI;
 };
-
-
-
 
 
 void HX711::printTest(){
@@ -247,22 +174,4 @@ int HX711::countDigitsBeforeDecimal(float value){
     }
 
     return digitCount;
-}
-
-
-void HX711::print_Data_Test(uint8_t data[3]) {
-    unsigned long value = 0;
-    // Ausgabe der Rohdaten im Zweierkomplementformat
-    Serial.print("\nData Array (2's Complement): ");
-    Serial.print(data[2], BIN);
-    Serial.print(" ");
-    Serial.print(data[1], BIN);
-    Serial.print(" ");
-    Serial.println(data[0], BIN);
-    value = (static_cast<unsigned long>(data[2]) << 16
-			| static_cast<unsigned long>(data[1]) << 8
-			| static_cast<unsigned long>(data[0]) );
-    Serial.println(value, BIN);
-    signed long digit = value;
-    Serial.println(digit, DEC);
 }
