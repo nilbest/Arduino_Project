@@ -1,12 +1,18 @@
 //Include Libraries
 #include <Arduino.h>
 #include "PressureSensor.h"
+#include "Multi_PressureSensor.h"
 
 // Pins am Arduino für HX711
 HX711 P1("P1",2,3,32,true);
+HX711 P2("P2",2,3,32);
+HX711 P3("P3",2,3,32);
+multi_HX711 All_HX711("All_HX711", 3, 32);
+
+
 /*
-HX711 P2("P2",4,5);
-HX711 P3("P3",6,7);
+HX711 P2("P2",4,5,32,true);
+HX711 P3("P3",6,7,32,true);
 */
 
 
@@ -19,13 +25,15 @@ void setup() {
   //Setup Pressure Sensors
   P1.setup();
   P1.print_private_Data();
-  /*
-  delay(500);
-  P2.setup();
-  delay(500);
-  P3.setup();
-  delay(500);
-  */
+
+  All_HX711.add_HX711(&P1);
+  All_HX711.print_multi_HX711();
+  All_HX711.add_HX711(&P2);
+  All_HX711.print_multi_HX711();
+  All_HX711.add_HX711(&P3);
+  All_HX711.print_multi_HX711();
+  //P1.print_private_Data();
+
   Serial.println("\nFinished Setup for Sensors");
   Serial.println("###################################################################\n\n\n");
   delay(500);

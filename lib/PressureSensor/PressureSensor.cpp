@@ -26,8 +26,9 @@ void HX711::setup(){
     pinMode(this->DOUT_PIN, INPUT);
     pinMode(this->SCK_PIN, OUTPUT);
     set_slope_and_yIntercept();
-    Serial.print(this->name+" HX711 finished setup\n");
+    Serial.print(this->name+" finished setup\n");
 }
+
 
 void HX711::read() {
   long value = 0;
@@ -89,6 +90,21 @@ void HX711::read() {
 }
 
 //#############################################################
+//_________________All Get Fuctions___________________
+
+int HX711::getDoutPin(){
+  return this->DOUT_PIN;
+}
+
+bool HX711::getSwitchSign(){
+    return this->switch_sign;
+};
+
+String HX711::get_Name(){
+    return this->name;
+};
+
+//#############################################################
 //_________________All Set Fuctions___________________
 
 void HX711::set_SCALE_FACTOR(float new_Scale_Factor){
@@ -97,6 +113,16 @@ void HX711::set_SCALE_FACTOR(float new_Scale_Factor){
 
 void HX711::set_OFFSET(float new_Offset){
     this->OFFSET=new_Offset;
+};
+
+void HX711::set_rawValue(long RawValue){
+    this->rawValue=RawValue;
+};
+
+void HX711::set_SCK_PIN(int SCK_PIN){
+    this->SCK_PIN=SCK_PIN;
+    Serial.print("\nSCK_PIN: ");
+    Serial.println(this->SCK_PIN);
 };
 
 void HX711::set_gain(byte gain) {
@@ -229,7 +255,7 @@ int HX711::countDigitsBeforeDecimal(float value){
 void HX711::print_Data_Test(uint8_t data[3]) {
     //Prints all Data in the Data Array
     //Used for debugging
-    
+
     unsigned long value = 0;
     // Ausgabe der Rohdaten im Zweierkomplementformat
     Serial.print("\nData Array (2's Complement): ");
@@ -247,8 +273,9 @@ void HX711::print_Data_Test(uint8_t data[3]) {
 }
 
 void HX711::print_private_Data(){
-  Serial.print("\nSetup Sensor ");
-  Serial.println(this->name);
+  Serial.print("\nSetup Sensor '");
+  Serial.print(this->name);
+  Serial.println("'");
   Serial.print("DOUT-Pin: ");
   Serial.println(this->DOUT_PIN);
   Serial.print("SCK-Pin: ");
@@ -263,4 +290,15 @@ void HX711::print_private_Data(){
   Serial.println(this->GAIN);
   Serial.print("Switch Sign: ");
   Serial.println(this->switch_sign);
+}
+
+uint8_t getFillerValue(uint8_t data) {
+  // Replicate the most significant bit to pad out a 32-bit signed integer
+	/*if (data & 0x80) {
+		return (0xFF);
+	} else {
+		return (0x00);
+	};
+  */
+    return (data & 0x80) ? 0xFF : 0x00;
 }
