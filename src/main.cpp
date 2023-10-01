@@ -18,6 +18,7 @@ void setup() {
   delay(500);
   //Setup Pressure Sensors
   P1.setup();
+  P1.print_private_Data();
   /*
   delay(500);
   P2.setup();

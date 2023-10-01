@@ -54,10 +54,10 @@ void HX711::read() {
   uint8_t filler = 0x00;
   
   while (digitalRead(this->DOUT_PIN));  // Warte, bis DOUT auf LOW geht
-
+  int count_Pulse = 0;
   // Pulse the clock pin 24 times to read the data.
   /*for (int i = 2; i >= 0; i--) {
-    data[i] = shiftIn(DOUT_PIN, SCK_PIN, MSBFIRST);
+    ata[i] = shiftIn(DOUT_PIN, SCK_PIN, MSBFIRST);d
   }
   */
   for (int i = 2; i >= 0; i--) {
@@ -67,6 +67,7 @@ void HX711::read() {
       bitWrite(data[i], j, digitalRead(this->DOUT_PIN)); // Einfügen des gelesenen Bits
       digitalWrite(SCK_PIN, LOW); // Setze die Taktleitung auf LOW
       count ++;
+      count_Pulse ++;
       //Serial.print(j);
     }
     /*
@@ -78,6 +79,8 @@ void HX711::read() {
     */
   }
 
+  Serial.print("\nAnz. Pulse in Loop: ");
+  Serial.println(count_Pulse);
 
  //Serial.println();
     print_Data_Test(data);
@@ -86,7 +89,11 @@ void HX711::read() {
   for (int i = 0; i < this->GAIN; i++) {
     digitalWrite(this->SCK_PIN, HIGH);
     digitalWrite(this->SCK_PIN, LOW);
+    count_Pulse++;
   }
+
+  Serial.print("\nAnz. Pulse all: ");
+  Serial.println(count_Pulse);
 
 /*
   // Lesen der Rohdaten
@@ -105,10 +112,12 @@ void HX711::read() {
   }
 */
 
+/*
   // HX711 auf standby setzen / in den Leerzustand
   digitalWrite(this->SCK_PIN, HIGH);
   digitalWrite(this->SCK_PIN, LOW);
-  
+*/
+
 // Replicate the most significant bit to pad out a 32-bit signed integer
 	if (data[2] & 0x80) {
 		filler = 0xFF;
@@ -132,7 +141,6 @@ void HX711::read() {
    set_pressure_kpa();
    //Serial.println(this->name+" finished Reading");
 }
-
 
 void HX711::set_voltage(){
     //4.63V Versorgung
@@ -167,15 +175,10 @@ void HX711::set_pressure_mmHg(){
     this->pressure_mmHg = pressure_mmHg;
 };
 
-
 void HX711::set_slope_and_yIntercept(){
     this->slope = (this->U_5_8PSI - this->U_1PSI) / (this->P_5_8PSI - this->P_1PSI);
     this->yIntercept = this->U_1PSI - this->slope * this->P_1PSI;
 };
-
-
-
-
 
 void HX711::printTest(){
     //Serial.println(this->name);
@@ -236,7 +239,6 @@ void HX711::printData(){
     Serial.print(" kPa");
 };
 
-
 int HX711::countDigitsBeforeDecimal(float value){
     int intValue = (int)value; // Ganzzahliger Teil extrahieren
     int digitCount = 1; // Mindestens eine Ziffer
@@ -248,7 +250,6 @@ int HX711::countDigitsBeforeDecimal(float value){
 
     return digitCount;
 }
-
 
 void HX711::print_Data_Test(uint8_t data[3]) {
     unsigned long value = 0;
@@ -265,4 +266,22 @@ void HX711::print_Data_Test(uint8_t data[3]) {
     Serial.println(value, BIN);
     signed long digit = value;
     Serial.println(digit, DEC);
+}
+
+void HX711::print_private_Data(){
+  Serial.print("\nSetup Data Pressure Sensor ");
+  Serial.println(this->name);
+  Serial.print("DOUT-Pin: ");
+  Serial.println(this->DOUT_PIN);
+  Serial.print("SCK-Pin: ");
+  Serial.println(this->SCK_PIN);
+  //Serial.println("Scale-Factor: "+this->SCALE_FACTOR);
+  Serial.print("Offset: ");
+  Serial.println(this->OFFSET);
+  Serial.print("Offset_Raw: ");
+  Serial.println(this->OFFSET_RAW);
+  Serial.print("Setup Gain: ");
+  Serial.println(this->gain);
+  Serial.print("Gain Pin Pulse: ");
+  Serial.println(this->GAIN);
 }

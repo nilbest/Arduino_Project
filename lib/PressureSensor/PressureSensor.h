@@ -66,6 +66,7 @@ class HX711
         int countDigitsBeforeDecimal(float value);
         void printTest();
         void printData();
+        void print_private_Data();
         void print_Data_Test(uint8_t data[3]);
 
 };
