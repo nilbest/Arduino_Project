@@ -56,10 +56,7 @@ void HX711::read() {
   while (digitalRead(this->DOUT_PIN));  // Warte, bis DOUT auf LOW geht
   int count_Pulse = 0;
   // Pulse the clock pin 24 times to read the data.
-  /*for (int i = 2; i >= 0; i--) {
-    ata[i] = shiftIn(DOUT_PIN, SCK_PIN, MSBFIRST);d
-  }
-  */
+
   for (int i = 2; i >= 0; i--) {
     int count=0;
     for (int j = 7; j >= 0; j--) { //Schleife von 7 bis 0 (8lang) beginnt mit dem MSB
@@ -68,19 +65,12 @@ void HX711::read() {
       digitalWrite(SCK_PIN, LOW); // Setze die Taktleitung auf LOW
       count ++;
       count_Pulse ++;
-      //Serial.print(j);
     }
-    /*
-    // Debugging-Ausgabe: Anzahl der Taktimpulse nach jedem Byte
-    Serial.print(" |Taktimpulse nach Byte ");
-    Serial.print(2 - i); // 2, 1, 0
-    Serial.print(": ");
-    Serial.println(count); // Insgesamt 8 Taktimpulse pro Byte
-    */
   }
 
-  Serial.print("\nAnz. Pulse in Loop: ");
-  Serial.println(count_Pulse);
+  //Debug Print Pulse counts
+  //Serial.print("\nAnz. Pulse in Loop: ");
+  //Serial.println(count_Pulse);
 
  //Serial.println();
     print_Data_Test(data);
@@ -92,31 +82,9 @@ void HX711::read() {
     count_Pulse++;
   }
 
-  Serial.print("\nAnz. Pulse all: ");
-  Serial.println(count_Pulse);
-
-/*
-  // Lesen der Rohdaten
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 7; j >= 0; --j) {
-      digitalWrite(SCK_PIN, HIGH);
-      bitWrite(data[i], j, digitalRead(this->DOUT_PIN)); // Einfügen der gelesenen 3 Bits
-      digitalWrite(this->SCK_PIN, LOW);
-    }
-  }
-  
-  // Zusätzliche SCK-Impulse entsprechend dem ausgewählten Gain hinzufügen
-  for (int i = 0; i < this->GAIN; ++i) {
-    digitalWrite(this->SCK_PIN, HIGH);
-    digitalWrite(this->SCK_PIN, LOW);
-  }
-*/
-
-/*
-  // HX711 auf standby setzen / in den Leerzustand
-  digitalWrite(this->SCK_PIN, HIGH);
-  digitalWrite(this->SCK_PIN, LOW);
-*/
+  //Debug Print Pulse counts
+  //Serial.print("\nAnz. Pulse all: ");
+  //Serial.println(count_Pulse);
 
 // Replicate the most significant bit to pad out a 32-bit signed integer
 	if (data[2] & 0x80) {
@@ -130,16 +98,12 @@ void HX711::read() {
 			| static_cast<unsigned long>(data[2]) << 16
 			| static_cast<unsigned long>(data[1]) << 8
 			| static_cast<unsigned long>(data[0]) );
- /*
-  data[2] ^= 0x80;
-  value = (static_cast<long>(data[2]) << 16) | (static_cast<long>(data[1]) << 8) | data[0];
-*/
+ 
    this->rawValue=value;
    set_voltage();
    set_pressure_mmHg();
    set_pressure_psi();
    set_pressure_kpa();
-   //Serial.println(this->name+" finished Reading");
 }
 
 void HX711::set_voltage(){
@@ -275,7 +239,6 @@ void HX711::print_private_Data(){
   Serial.println(this->DOUT_PIN);
   Serial.print("SCK-Pin: ");
   Serial.println(this->SCK_PIN);
-  //Serial.println("Scale-Factor: "+this->SCALE_FACTOR);
   Serial.print("Offset: ");
   Serial.println(this->OFFSET);
   Serial.print("Offset_Raw: ");
