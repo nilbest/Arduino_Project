@@ -3,7 +3,7 @@
 #include "PressureSensor.h"
 
 // Pins am Arduino für HX711
-HX711 P1("P1",2,3,32);
+HX711 P1("P1",2,3,32,true);
 /*
 HX711 P2("P2",4,5);
 HX711 P3("P3",6,7);

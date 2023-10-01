@@ -27,6 +27,7 @@ class HX711
         float OFFSET;       // Offset-Korrektur (falls nötig)
         int gain;
         byte GAIN;
+        bool switch_sign;
 
         long rawValue;
         long OFFSET_RAW;
@@ -45,7 +46,7 @@ class HX711
         float yIntercept;
 
     public:
-        HX711(String name, int dout, int sck, byte gain = 128);
+        HX711(String name, int dout, int sck, byte gain = 128, bool switch_sign=false);
         virtual ~HX711();
 
         void setup();
@@ -70,22 +71,5 @@ class HX711
         void print_Data_Test(uint8_t data[3]);
 
 };
-
-/*
-const int analogPin = A0;
-const int inputResolution = 1023;
-const int maxVoltIn = 5;
-
-//Used if not made in Classes
-extern int SensorValue;
-extern float voltageSensor;
-
-
-void readSensor();
-void getVoltageSensor();
-
-float getPressure();
-
-*/
 
 #endif

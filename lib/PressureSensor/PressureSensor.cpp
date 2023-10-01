@@ -1,21 +1,25 @@
 #include <Arduino.h>
 #include "PressureSensor.h"
 
-HX711::HX711(String name, int dout, int sck, byte gain){
+HX711::HX711(String name, int dout, int sck, byte gain, bool switch_sign){
     //Safes the HX711 Class with the Pin Config
-    this->name = name;
+    this->name = name+" HX711";
     this->DOUT_PIN=dout;
     this->SCK_PIN=sck;
     this->SCALE_FACTOR = 1.0;
     this->OFFSET= 0.0;
     this->OFFSET_RAW=-80000000;
     this->gain= gain;
+    this->switch_sign= switch_sign;
     set_gain(gain);
-    Serial.println(this->name+" as HX711 initialized");
+    Serial.println(this->name+" initialized");
 }
 
 HX711::~HX711(){
 }
+
+//#############################################################
+//_________________All User Fuctions___________________
 
 void HX711::setup(){
     //Calls the pinMode 
@@ -25,31 +29,8 @@ void HX711::setup(){
     Serial.print(this->name+" HX711 finished setup\n");
 }
 
-void HX711::set_SCALE_FACTOR(float new_Scale_Factor){
-    this->SCALE_FACTOR=new_Scale_Factor;
-};
-
-void HX711::set_OFFSET(float new_Offset){
-    this->OFFSET=new_Offset;
-};
-
-void HX711::set_gain(byte gain) {
-	switch (gain) {
-		case 128:		// channel A, gain factor 128
-			this->GAIN = 1;
-			break;
-		case 64:		// channel A, gain factor 64
-			this->GAIN = 3;
-			break;
-		case 32:		// channel B, gain factor 32
-			this->GAIN = 2;
-			break;
-	};
-};
-
 void HX711::read() {
   long value = 0;
-  //byte data[3] = {0};
   uint8_t data[3] = {0};
   uint8_t filler = 0x00;
   
@@ -71,9 +52,7 @@ void HX711::read() {
   //Debug Print Pulse counts
   //Serial.print("\nAnz. Pulse in Loop: ");
   //Serial.println(count_Pulse);
-
- //Serial.println();
-    print_Data_Test(data);
+  //print_Data_Test(data);
 
   // Zusätzliche SCK-Impulse entsprechend dem ausgewählten Gain hinzufügen
   for (int i = 0; i < this->GAIN; i++) {
@@ -98,7 +77,10 @@ void HX711::read() {
 			| static_cast<unsigned long>(data[2]) << 16
 			| static_cast<unsigned long>(data[1]) << 8
 			| static_cast<unsigned long>(data[0]) );
- 
+
+   if(this->switch_sign){
+    value = -value;
+   };
    this->rawValue=value;
    set_voltage();
    set_pressure_mmHg();
@@ -106,10 +88,36 @@ void HX711::read() {
    set_pressure_kpa();
 }
 
+//#############################################################
+//_________________All Set Fuctions___________________
+
+void HX711::set_SCALE_FACTOR(float new_Scale_Factor){
+    this->SCALE_FACTOR=new_Scale_Factor;
+};
+
+void HX711::set_OFFSET(float new_Offset){
+    this->OFFSET=new_Offset;
+};
+
+void HX711::set_gain(byte gain) {
+	switch (gain) {
+		case 128:		// channel A, gain factor 128
+			this->GAIN = 1;
+			break;
+		case 64:		// channel A, gain factor 64
+			this->GAIN = 3;
+			break;
+		case 32:		// channel B, gain factor 32
+			this->GAIN = 2;
+			break;
+	};
+};
+
 void HX711::set_voltage(){
     //4.63V Versorgung
     this->voltage = (this->rawValue/pow(2,24))*(4.91/this->gain); //for mV *1000
     //this->voltage = (this->rawValue * 4.91) / static_cast<float>(0x7FFFFF);
+
 }
 
 void HX711::set_pressure_psi(){
@@ -143,6 +151,9 @@ void HX711::set_slope_and_yIntercept(){
     this->slope = (this->U_5_8PSI - this->U_1PSI) / (this->P_5_8PSI - this->P_1PSI);
     this->yIntercept = this->U_1PSI - this->slope * this->P_1PSI;
 };
+
+//#############################################################
+//_________________All Print Fuctions___________________
 
 void HX711::printTest(){
     //Serial.println(this->name);
@@ -216,6 +227,9 @@ int HX711::countDigitsBeforeDecimal(float value){
 }
 
 void HX711::print_Data_Test(uint8_t data[3]) {
+    //Prints all Data in the Data Array
+    //Used for debugging
+    
     unsigned long value = 0;
     // Ausgabe der Rohdaten im Zweierkomplementformat
     Serial.print("\nData Array (2's Complement): ");
@@ -233,7 +247,7 @@ void HX711::print_Data_Test(uint8_t data[3]) {
 }
 
 void HX711::print_private_Data(){
-  Serial.print("\nSetup Data Pressure Sensor ");
+  Serial.print("\nSetup Sensor ");
   Serial.println(this->name);
   Serial.print("DOUT-Pin: ");
   Serial.println(this->DOUT_PIN);
@@ -247,4 +261,6 @@ void HX711::print_private_Data(){
   Serial.println(this->gain);
   Serial.print("Gain Pin Pulse: ");
   Serial.println(this->GAIN);
+  Serial.print("Switch Sign: ");
+  Serial.println(this->switch_sign);
 }
