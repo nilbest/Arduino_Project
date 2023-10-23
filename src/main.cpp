@@ -29,8 +29,8 @@ void setup() {
   Serial.println("###################################################################");
   Serial.println("Starting Setup for Sensors\n");
   delay(500);
+
   //Setup Pressure Sensors
-  
   P1.setup();
   P1.print_private_Data();
   P2.setup();
@@ -59,7 +59,8 @@ void loop() {
   Serial.print("\n\nMessung ");
   Serial.print(Loop_counter);
   //Reading Pressure Sensors
-  //Serial.print("\n");
+
+ 
   /*
   P1.read();
   P2.read();

@@ -78,6 +78,8 @@ class HX711
         void set_pressure_mmHg();
 
         int countDigitsBeforeDecimal(float value);
+
+        //To get smaler RAM Usage make them using pointers and do not add them to each instance!!!
         void printTest();
         void printData();
         void print_private_Data();
