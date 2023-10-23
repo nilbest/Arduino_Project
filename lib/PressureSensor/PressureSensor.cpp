@@ -310,3 +310,10 @@ uint8_t getFillerValue(uint8_t data) {
   */
     return (data & 0x80) ? 0xFF : 0x00;
 }
+
+//Bsp. for outsourcing Print Statements
+void test_print(HX711* HX711_instance){
+    Serial.print("\n\nTesting\n");
+    Serial.print("Name: ");
+    Serial.println(HX711_instance->get_Name());
+};

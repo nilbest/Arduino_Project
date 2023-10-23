@@ -87,4 +87,6 @@ class HX711
 
 };
 
+void test_print(HX711* HX711_instance);
+
 #endif

@@ -44,7 +44,7 @@ void setup() {
   All_HX711.setup_overwrite();
   All_HX711.print_multi_HX711();
   
-
+  test_print(&P1);
 
   Serial.println("\nFinished Setup for Sensors");
   Serial.println("###################################################################\n\n\n");
