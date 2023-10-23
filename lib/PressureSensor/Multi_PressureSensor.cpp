@@ -33,6 +33,15 @@ void multi_HX711::add_HX711(HX711* hx711Instance) {
         Serial.println("################################################################################################\n\n");
 };
 
+//Overwrites the Setup for each added HX711 device
+void multi_HX711::setup_overwrite(){
+    for (int i = 0; i < Anz_HX711; i++) {
+            if (HX711s[i] != nullptr){
+                HX711s[i]->setup();
+            };
+        };
+};
+
 void multi_HX711::read(){
     //Please check if the value and data instances match Anz_HX711
     long value_S1 = 0;
@@ -45,23 +54,38 @@ void multi_HX711::read(){
     uint8_t filler_S1 = 0x00;
     uint8_t filler_S2 = 0x00;
     uint8_t filler_S3 = 0x00;
+    //int count_i = 1;
+
+    
 
     for (int i = 0; i < Anz_HX711; i++) {
         if (HX711s[i] != nullptr) {
-            while (digitalRead(HX711s[i]->getDoutPin()) == LOW) {
+            while (digitalRead(HX711s[i]->get_Dout_Pin()) == LOW) {
                     // Waits until the DOUT pin of the current HX711 instance goes HIGH
             };
         };
     };
 
+    
+    Serial.print("\n");
+
+    
+
     //Pulse 24 times the clock Pin to read Data
     for (int i = 2; i >= 0; i--) {
         for (int j = 7; j >= 0; j--) { //Schleife von 7 bis 0 (8lang) beginnt mit dem MSB
+            /*
+            Serial.print(count_i);
+            Serial.print(", ");
+            */
+            delay(1);
             digitalWrite(this->Shared_SCK_PIN, HIGH); // Setze die Taktleitung auf HIGH
-            bitWrite(data_S1[i], j, digitalRead(HX711s[0]->getDoutPin())); // Einfügen des gelesenen Bits
-            bitWrite(data_S2[i], j, digitalRead(HX711s[1]->getDoutPin()));
-            bitWrite(data_S3[i], j, digitalRead(HX711s[2]->getDoutPin()));
+            bitWrite(data_S1[i], j, digitalRead(HX711s[0]->get_Dout_Pin())); // Einfügen des gelesenen Bits
+            bitWrite(data_S2[i], j, digitalRead(HX711s[1]->get_Dout_Pin()));
+            bitWrite(data_S3[i], j, digitalRead(HX711s[2]->get_Dout_Pin()));
             digitalWrite(this->Shared_SCK_PIN, LOW); // Setze die Taktleitung auf LOW
+            //delay(10);
+            //count_i ++;
         };
     };
 
@@ -78,9 +102,9 @@ void multi_HX711::read(){
     
     // Construct a 32-bit signed integer
 	value_S1 = ( static_cast<unsigned long>(filler_S1) << 24
-			| static_cast<unsigned long>(data_S1[2]) << 16
-			| static_cast<unsigned long>(data_S1[1]) << 8
-			| static_cast<unsigned long>(data_S1[0]) );
+		| static_cast<unsigned long>(data_S1[2]) << 16
+		| static_cast<unsigned long>(data_S1[1]) << 8
+		| static_cast<unsigned long>(data_S1[0]) );
     value_S2 = ( static_cast<unsigned long>(filler_S2) << 24
 		| static_cast<unsigned long>(data_S2[2]) << 16
 		| static_cast<unsigned long>(data_S2[1]) << 8
@@ -89,15 +113,33 @@ void multi_HX711::read(){
 		| static_cast<unsigned long>(data_S3[2]) << 16
 		| static_cast<unsigned long>(data_S3[1]) << 8
 		| static_cast<unsigned long>(data_S3[0]) );
-    
+/*
+    Serial.print("\n\nS1:\n");
+    Serial.print(data_S1[2]);
+    Serial.print(data_S1[1]);
+    Serial.println(data_S1[0]);
+    Serial.println(value_S1);
+    Serial.print("\n\nS2:\n");
+    Serial.print(data_S2[2]);
+    Serial.print(data_S2[1]);
+    Serial.println(data_S2[0]);
+    Serial.println(value_S2);
+    Serial.print("\n\nS3:\n");
+    Serial.print(data_S3[2]);
+    Serial.print(data_S3[1]);
+    Serial.println(data_S3[0]);
+    Serial.println(value_S3);
+*/
+
     //checks if it has to negate the value
     for(int i = 0; i < Anz_HX711; i++){
         if (HX711s[i] != nullptr) {
-            if(HX711s[i]->getSwitchSign()){
+            if(HX711s[i]->get_SwitchSign()){
                 *all_values[i] = -(*all_values[i]);
             };
         };
     };
+
 
     for(int i = 0; i < Anz_HX711; i++){
         if (HX711s[i] != nullptr) {
@@ -126,6 +168,7 @@ void multi_HX711::set_gain(byte gain = 128){
 };
 
 void multi_HX711::print_multi_HX711(){
+    Serial.println("##############################");
     Serial.print("\nSetup Sensor '");
     Serial.print(this->Name);
     Serial.println("'");
@@ -138,6 +181,24 @@ void multi_HX711::print_multi_HX711(){
            Serial.println(HX711s[i]->get_Name()); 
         };
     };
+    Serial.print("DOUT PIN: ");
+    for (int i = 0; i < Anz_HX711; i++) {
+        if (i<Anz_HX711-1){
+            Serial.print(HX711s[i]->get_Dout_Pin());
+            Serial.print("; ");
+        }else{
+           Serial.println(HX711s[i]->get_Dout_Pin()); 
+        };
+    };
+    Serial.print("SCK PIN: ");
+    for (int i = 0; i < Anz_HX711; i++) {
+        if (i<Anz_HX711-1){
+            Serial.print(HX711s[i]->get_SCK_PIN());
+            Serial.print("; ");
+        }else{
+           Serial.println(HX711s[i]->get_SCK_PIN()); 
+        };
+    };
     Serial.print("Is empty? ");
     Serial.println(this->is_empty);
     Serial.print("Shared SCK PIN: ");
@@ -146,7 +207,36 @@ void multi_HX711::print_multi_HX711(){
     Serial.println(this->gain);
     Serial.print("Extra Pulse for Gain: ");
     Serial.println(this->gain);
-
+    Serial.println("##############################");
 };
 
+void multi_HX711::print_Data_Test(uint8_t data[3]) {
+    //Prints all Data in the Data Array
+    //Used for debugging
 
+    unsigned long value = 0;
+    // Ausgabe der Rohdaten im Zweierkomplementformat
+    Serial.print("\nData Array (2's Complement): ");
+    Serial.print(data[2], BIN);
+    Serial.print(" ");
+    Serial.print(data[1], BIN);
+    Serial.print(" ");
+    Serial.println(data[0], BIN);
+    value = (static_cast<unsigned long>(data[2]) << 16
+			| static_cast<unsigned long>(data[1]) << 8
+			| static_cast<unsigned long>(data[0]) );
+    Serial.println(value, BIN);
+    signed long digit = value;
+    Serial.println(digit, DEC);
+}
+
+void multi_HX711::printTest(){
+    for (int i = 0; i < Anz_HX711; i++) {
+        if (HX711s[i] != nullptr) {
+            Serial.println();
+            Serial.println(HX711s[i]->get_Name());
+            HX711s[i]->printTest();
+        };
+    };
+
+};

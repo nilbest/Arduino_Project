@@ -22,6 +22,8 @@ class multi_HX711
         multi_HX711(String name,int Shared_SCK_PIN, int gain = 128);
         virtual ~multi_HX711();
 
+        void setup_overwrite(); 
+
         void read();
 
         void add_HX711(HX711* hx711Instance);
@@ -33,6 +35,9 @@ class multi_HX711
         
         void print_all_HX711();
         
+        void print_Data_Test(uint8_t data[3]);
+        void printTest();
 };
+
 
 #endif

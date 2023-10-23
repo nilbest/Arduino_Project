@@ -57,10 +57,11 @@ class HX711
         void read();
 
 
-        int getDoutPin();
-        bool getSwitchSign();
+        int get_Dout_Pin();
+        int get_SCK_PIN();
+        bool get_SwitchSign();
         String get_Name();
-        //int get
+        
 
         void set_SCK_PIN(int SCK_PIN);
         void set_rawValue(long RawValue);

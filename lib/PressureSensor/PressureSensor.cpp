@@ -92,16 +92,20 @@ void HX711::read() {
 //#############################################################
 //_________________All Get Fuctions___________________
 
-int HX711::getDoutPin(){
+int HX711::get_Dout_Pin(){
   return this->DOUT_PIN;
 }
 
-bool HX711::getSwitchSign(){
+bool HX711::get_SwitchSign(){
     return this->switch_sign;
 };
 
 String HX711::get_Name(){
     return this->name;
+};
+
+int HX711::get_SCK_PIN(){
+    return this->SCK_PIN;
 };
 
 //#############################################################
@@ -120,8 +124,12 @@ void HX711::set_rawValue(long RawValue){
 };
 
 void HX711::set_SCK_PIN(int SCK_PIN){
+    Serial.print("\n");
+    Serial.println(this->name);
+    Serial.print("Set SCK_PIN from: ");
+    Serial.print(this->SCK_PIN);
     this->SCK_PIN=SCK_PIN;
-    Serial.print("\nSCK_PIN: ");
+    Serial.print(" to ");
     Serial.println(this->SCK_PIN);
 };
 
@@ -168,7 +176,7 @@ void HX711::set_pressure_kpa(){
 
 void HX711::set_pressure_mmHg(){
     float pressure_mmHg;
-    pressure_mmHg = (this->voltage - 0.5) * (100.0 / 4.0);
+    pressure_mmHg = (this->voltage) * (100.0 / 4.0);
     pressure_mmHg = (pressure_mmHg * this->SCALE_FACTOR) + this->OFFSET;
     this->pressure_mmHg = pressure_mmHg;
 };
