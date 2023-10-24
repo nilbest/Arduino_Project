@@ -65,42 +65,30 @@ void multi_HX711::read(){
     uint8_t filler_S1 = 0x00;
     uint8_t filler_S2 = 0x00;
     uint8_t filler_S3 = 0x00;
-    //int count_i = 1;
+
 
     
-
+    //Loop through all HX711 and checks if they are ready
     for (int i = 0; i < Anz_HX711; i++) {
         if (HX711s[i] != nullptr) {
-            while (digitalRead(HX711s[i]->get_Dout_Pin()) == LOW) {
-                    // Waits until the DOUT pin of the current HX711 instance goes HIGH
+            while (digitalRead(HX711s[i]->get_Dout_Pin()) == HIGH) {
+                // Waits until the DOUT pin of the current HX711 instance goes HIGH
             };
         };
     };
 
-    
-    Serial.print("\n");
-
-    
-
     //Pulse 24 times the clock Pin to read Data
     for (int i = 2; i >= 0; i--) {
-        for (int j = 7; j >= 0; j--) { //Schleife von 7 bis 0 (8lang) beginnt mit dem MSB
-            /*
-            Serial.print(count_i);
-            Serial.print(", ");
-            */
-            delay(1);
+        for (int j = 7; j >= 0; j--) { //Loop from 7 to 0 (8 Times) beginning with MSB
             digitalWrite(this->Shared_SCK_PIN, HIGH); // Setze die Taktleitung auf HIGH
-            bitWrite(data_S1[i], j, digitalRead(HX711s[0]->get_Dout_Pin())); // Einfügen des gelesenen Bits
-            bitWrite(data_S2[i], j, digitalRead(HX711s[1]->get_Dout_Pin()));
-            bitWrite(data_S3[i], j, digitalRead(HX711s[2]->get_Dout_Pin()));
-            digitalWrite(this->Shared_SCK_PIN, LOW); // Setze die Taktleitung auf LOW
-            //delay(10);
-            //count_i ++;
+                bitWrite(data_S1[i], j, digitalRead(HX711s[0]->get_Dout_Pin())); // pulls the Bit into the Array
+                bitWrite(data_S2[i], j, digitalRead(HX711s[1]->get_Dout_Pin()));
+                bitWrite(data_S3[i], j, digitalRead(HX711s[2]->get_Dout_Pin()));
+            digitalWrite(this->Shared_SCK_PIN, LOW); // Makes SCK PIN / Taktleitung LOW
         };
     };
 
-    // Zusätzliche SCK-Impulse entsprechend dem ausgewählten Gain hinzufügen
+    // Makes the last SCK Puls for the selected Gain
     for (int i = 0; i < this->GAIN; i++) {
         digitalWrite(this->Shared_SCK_PIN, HIGH);
         digitalWrite(this->Shared_SCK_PIN, LOW);
@@ -124,23 +112,6 @@ void multi_HX711::read(){
 		| static_cast<unsigned long>(data_S3[2]) << 16
 		| static_cast<unsigned long>(data_S3[1]) << 8
 		| static_cast<unsigned long>(data_S3[0]) );
-/*
-    Serial.print("\n\nS1:\n");
-    Serial.print(data_S1[2]);
-    Serial.print(data_S1[1]);
-    Serial.println(data_S1[0]);
-    Serial.println(value_S1);
-    Serial.print("\n\nS2:\n");
-    Serial.print(data_S2[2]);
-    Serial.print(data_S2[1]);
-    Serial.println(data_S2[0]);
-    Serial.println(value_S2);
-    Serial.print("\n\nS3:\n");
-    Serial.print(data_S3[2]);
-    Serial.print(data_S3[1]);
-    Serial.println(data_S3[0]);
-    Serial.println(value_S3);
-*/
 
     //checks if it has to negate the value
     for(int i = 0; i < Anz_HX711; i++){
@@ -150,7 +121,6 @@ void multi_HX711::read(){
             };
         };
     };
-
 
     for(int i = 0; i < Anz_HX711; i++){
         if (HX711s[i] != nullptr) {
