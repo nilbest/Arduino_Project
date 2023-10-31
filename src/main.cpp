@@ -7,15 +7,15 @@
 
 
 HX711 P1("P1",5,4,32,true);
-HX711 P2("P2",7,6,32,true);
-HX711 P3("P3",9,8,32,true);
+HX711 P2("P2",6,6,32,true);
+HX711 P3("P3",7,8,32,true);
 
 /*
 HX711 P1("P1",5,3,32,true);
 HX711 P2("P2",7,3,32,true);
 HX711 P3("P3",9,3,32,true);
 */
-multi_HX711 All_HX711("All_HX711", 3, 32);
+multi_HX711 All_HX711("All_HX711", 4, 32);
 
 long Loop_counter = 0;
 
@@ -32,6 +32,7 @@ void setup() {
 
   //Setup Pressure Sensors
   P1.setup();
+  P1.set_slope_and_yintercept(1.1779, -0.0002);
   P1.print_private_Data();
   P2.setup();
   P2.print_private_Data();

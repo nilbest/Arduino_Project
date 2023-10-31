@@ -12,6 +12,7 @@ HX711::HX711(String name, int dout, int sck, byte gain, bool switch_sign){
     this->gain= gain;
     this->switch_sign= switch_sign;
     set_gain(gain);
+    set_slope_and_yintercept();
     Serial.println(this->name+" initialized");
 }
 
@@ -25,7 +26,6 @@ void HX711::setup(){
     //Calls the pinMode 
     pinMode(this->DOUT_PIN, INPUT);
     pinMode(this->SCK_PIN, OUTPUT);
-    set_slope_and_yIntercept();
     Serial.print(this->name+" finished setup\n");
 }
 
@@ -149,7 +149,12 @@ void HX711::set_gain(byte gain) {
 
 void HX711::set_voltage(){
     //4.63V Versorgung
-    this->voltage = (this->rawValue/pow(2,24))*(4.91/this->gain); //for mV *1000
+    float voltage;
+    voltage = (this->rawValue/pow(2,24))*(4.91/this->gain); //for mV *1000
+    // (Data - b) / m
+    voltage = (voltage-this->yintercept)/this->slope;
+    this->voltage= voltage;
+    //this->voltage = (this->rawValue/pow(2,24))*(4.91/this->slope)+this->intercept;
     //this->voltage = (this->rawValue * 4.91) / static_cast<float>(0x7FFFFF);
 
 }
@@ -181,9 +186,13 @@ void HX711::set_pressure_mmHg(){
     this->pressure_mmHg = pressure_mmHg;
 };
 
-void HX711::set_slope_and_yIntercept(){
-    this->slope = (this->U_5_8PSI - this->U_1PSI) / (this->P_5_8PSI - this->P_1PSI);
-    this->yIntercept = this->U_1PSI - this->slope * this->P_1PSI;
+void HX711::set_slope_and_yintercept(float slope = 1 , float yintercept = 1){
+    this->slope = slope;
+    this->yintercept = yintercept;
+    Serial.print("\nslope: ");
+    Serial.print(this->slope);
+    Serial.print("\t intercept: ");
+    Serial.println(this->yintercept);
 };
 
 //#############################################################

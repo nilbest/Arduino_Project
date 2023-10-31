@@ -31,10 +31,10 @@ class HX711
         int gain;
         byte GAIN;
         bool switch_sign;
+        long OFFSET_RAW;    //OFFSET for Nulling HX711
 
         long rawValue;
-        long OFFSET_RAW;
-        float voltage;
+        float voltage;      
         float pressure_psi;
         float pressure_kpa;
         float pressure_mmHg;
@@ -45,8 +45,9 @@ class HX711
         float P_1PSI = 1.0;
         float P_5_8PSI = 5.8;
 
-        float slope;
-        float yIntercept;
+        float slope; //m
+        float yintercept; //b
+
 
     public:
         
@@ -71,12 +72,11 @@ class HX711
 
 
         //Interne Funktionen
-        void set_slope_and_yIntercept();
+        void set_slope_and_yintercept(float slope = 1 , float yintercept = 1); // slope = m ; intercept = b
         void set_voltage();
         void set_pressure_psi();
         void set_pressure_kpa();
         void set_pressure_mmHg();
-
         int countDigitsBeforeDecimal(float value);
 
         //To get smaler RAM Usage make them using pointers and do not add them to each instance!!!
@@ -84,7 +84,6 @@ class HX711
         void printData();
         void print_private_Data();
         void print_Data_Test(uint8_t data[3]);
-
 };
 
 void test_print(HX711* HX711_instance);
