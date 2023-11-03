@@ -32,7 +32,8 @@ void setup() {
 
   //Setup Pressure Sensors
   P1.setup();
-  P1.set_slope_and_yintercept(1.1779, -0.0002);
+  //P1.set_slope_and_yintercept(1.1779, -0.0002);
+  P1.set_slope_and_yintercept(1.1663, 0.2734);
   P1.print_private_Data();
   P2.setup();
   P2.print_private_Data();

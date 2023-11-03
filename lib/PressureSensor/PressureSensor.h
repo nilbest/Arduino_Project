@@ -72,7 +72,7 @@ class HX711
 
 
         //Interne Funktionen
-        void set_slope_and_yintercept(float slope = 1 , float yintercept = 1); // slope = m ; intercept = b
+        void set_slope_and_yintercept(float slope = 0 , float yintercept = 0); // slope = m ; intercept = b
         void set_voltage();
         void set_pressure_psi();
         void set_pressure_kpa();

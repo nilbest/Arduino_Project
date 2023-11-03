@@ -150,12 +150,13 @@ void HX711::set_gain(byte gain) {
 void HX711::set_voltage(){
     //4.63V Versorgung
     float voltage;
-    voltage = (this->rawValue/pow(2,24))*(4.91/this->gain); //for mV *1000
+    voltage = (this->rawValue/pow(2,24))*(4.91/this->gain)*1000; //for mV *1000
     // (Data - b) / m
-    voltage = (voltage-this->yintercept)/this->slope;
+    if (this->yintercept != 0 or this->slope !=0){
+        voltage = (voltage-this->yintercept)/this->slope; //(y-b)/m
+    } 
     this->voltage= voltage;
-    //this->voltage = (this->rawValue/pow(2,24))*(4.91/this->slope)+this->intercept;
-    //this->voltage = (this->rawValue * 4.91) / static_cast<float>(0x7FFFFF);
+
 
 }
 
@@ -181,12 +182,16 @@ void HX711::set_pressure_kpa(){
 
 void HX711::set_pressure_mmHg(){
     float pressure_mmHg;
-    pressure_mmHg = (this->voltage) * (100.0 / 4.0);
-    pressure_mmHg = (pressure_mmHg * this->SCALE_FACTOR) + this->OFFSET;
+    pressure_mmHg = (5.0431 * this->voltage) + (-19.483); //m*x+b
+    if (pressure_mmHg <= 0){
+        pressure_mmHg = 0.00;
+        }
+    //pressure_mmHg = (this->voltage * 4.3237 ) + (-20.655);
+    //pressure_mmHg = (pressure_mmHg * this->SCALE_FACTOR) + this->OFFSET;
     this->pressure_mmHg = pressure_mmHg;
 };
 
-void HX711::set_slope_and_yintercept(float slope = 1 , float yintercept = 1){
+void HX711::set_slope_and_yintercept(float slope = 0 , float yintercept = 0){
     this->slope = slope;
     this->yintercept = yintercept;
     Serial.print("\nslope: ");
@@ -232,8 +237,8 @@ void HX711::printTest(){
     for ( int i = countDigitsBeforeDecimal(this->voltage) ; i<4;i++){
         Serial.print(" ");
     }
-    Serial.print(this->voltage, 4);
-    Serial.print(" V");
+    Serial.print(this->voltage, 2);
+    Serial.print(" mV");
     
     Serial.print(", Druck (mmHg): ");
     for ( int i = countDigitsBeforeDecimal(this->pressure_mmHg) ; i<4;i++){
