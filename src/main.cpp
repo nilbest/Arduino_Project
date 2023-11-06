@@ -22,9 +22,8 @@ void setup() {
 
   //Setup Pressure Sensors
   P1.setup();
-  //P1.set_U_m_and_U_b(1.1779, -0.0002);
-  P1.set_U_m_and_U_b(1.1663, 0.2734);
-  P1.set_P_m_and_P_b();
+  P1.set_U_m_and_U_b(1.1688,0.0989);
+  P1.set_P_m_and_P_b(0.1972,4.0057);
   P1.print_private_Data();
 
   P2.setup();
@@ -70,9 +69,10 @@ void loop() {
   */
   
   All_HX711.read();
-  All_HX711.printTest();
+  P2.printTest();
+  //All_HX711.printTest();
   
   // Ausgabe auf der seriellen Konsole
 
-  delay(3000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
+  delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
 }
