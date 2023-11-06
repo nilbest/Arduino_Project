@@ -12,7 +12,7 @@ HX711::HX711(String name, int dout, int sck, byte gain, bool switch_sign){
     this->gain= gain;
     this->switch_sign= switch_sign;
     set_gain(gain);
-    set_slope_and_yintercept();
+    set_U_m_and_U_b();
     Serial.println(this->name+" initialized");
 }
 
@@ -152,24 +152,19 @@ void HX711::set_voltage(){
     float voltage;
     voltage = (this->rawValue/pow(2,24))*(4.91/this->gain)*1000; //for mV *1000
     // (Data - b) / m
-    if (this->yintercept != 0 or this->slope !=0){
-        voltage = (voltage-this->yintercept)/this->slope; //(y-b)/m
+    if (this->U_b != 0 or this->U_m !=0){
+        voltage = (voltage-this->U_b)/this->U_m; //(y-b)/m
     } 
     this->voltage= voltage;
-
-
 }
 
 void HX711::set_pressure_psi(){
     float pressure_psi;
-
     //via Point Kalibration
     pressure_psi = (this->voltage - 0.5) * (100.0 / 4.0);
     pressure_psi = (pressure_psi * this->SCALE_FACTOR) + this->OFFSET;
-    
     //via Linear Interpolation
     //pressure_psi= (voltage - yIntercept) / slope;
-
     this->pressure_psi=pressure_psi;
 };
 
@@ -191,14 +186,28 @@ void HX711::set_pressure_mmHg(){
     this->pressure_mmHg = pressure_mmHg;
 };
 
-void HX711::set_slope_and_yintercept(float slope = 0 , float yintercept = 0){
-    this->slope = slope;
-    this->yintercept = yintercept;
+void HX711::set_U_m_and_U_b(float slope = 0 , float yintercept = 0){
+    this->U_m = slope;
+    this->U_b = yintercept;
+    /*
     Serial.print("\nslope: ");
-    Serial.print(this->slope);
+    Serial.print(this->U_m);
     Serial.print("\t intercept: ");
-    Serial.println(this->yintercept);
+    Serial.println(this->U_b);
+    */
 };
+
+void HX711::set_P_m_and_P_b(float slope = 0 , float yintercept = 0){
+    this->P_m = slope;
+    this->P_b = yintercept;
+    /*
+    Serial.print("\nslope: ");
+    Serial.print(this->P_m);
+    Serial.print("\t intercept: ");
+    Serial.println(this->P_b);
+    */
+};
+
 
 //#############################################################
 //_________________All Print Fuctions___________________

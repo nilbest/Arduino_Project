@@ -39,14 +39,11 @@ class HX711
         float pressure_kpa;
         float pressure_mmHg;
 
-        //Referenzpunkte für lineare Interpolation
-        float U_1PSI = 0.03;    //30mV
-        float U_5_8PSI = 0.075; //75mV
-        float P_1PSI = 1.0;
-        float P_5_8PSI = 5.8;
-
-        float slope; //m
-        float yintercept; //b
+        //lineare Interpolation
+        float U_m; //m
+        float U_b; //b
+        float P_m;
+        float P_b;
 
 
     public:
@@ -72,7 +69,8 @@ class HX711
 
 
         //Interne Funktionen
-        void set_slope_and_yintercept(float slope = 0 , float yintercept = 0); // slope = m ; intercept = b
+        void set_U_m_and_U_b(float slope = 0 , float yintercept = 0); // slope = m ; intercept = b
+        void set_P_m_and_P_b(float slope = 0 , float yintercept = 0); // slope = m ; intercept = b
         void set_voltage();
         void set_pressure_psi();
         void set_pressure_kpa();

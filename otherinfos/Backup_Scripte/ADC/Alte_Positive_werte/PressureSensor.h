@@ -53,7 +53,7 @@ class HX711
         void set_OFFSET(float new_Offset);
 
         //Interne Funktionen
-        void set_slope_and_yIntercept();
+        void set_U_m_and_U_b();
         void set_voltage();
         void set_pressure_psi();
         void set_pressure_kpa();

@@ -4,23 +4,13 @@
 #include "Multi_PressureSensor.h"
 
 // Pins am Arduino für HX711
-
-
 HX711 P1("P1",5,4,32,true);
 HX711 P2("P2",6,6,32,true);
 HX711 P3("P3",7,8,32,true);
 
-/*
-HX711 P1("P1",5,3,32,true);
-HX711 P2("P2",7,3,32,true);
-HX711 P3("P3",9,3,32,true);
-*/
 multi_HX711 All_HX711("All_HX711", 4, 32);
 
 long Loop_counter = 0;
-
-
-
 
 void setup() {
   Serial.begin(115200);
@@ -32,12 +22,19 @@ void setup() {
 
   //Setup Pressure Sensors
   P1.setup();
-  //P1.set_slope_and_yintercept(1.1779, -0.0002);
-  P1.set_slope_and_yintercept(1.1663, 0.2734);
+  //P1.set_U_m_and_U_b(1.1779, -0.0002);
+  P1.set_U_m_and_U_b(1.1663, 0.2734);
+  P1.set_P_m_and_P_b();
   P1.print_private_Data();
+
   P2.setup();
+  P2.set_U_m_and_U_b();
+  P2.set_P_m_and_P_b();
   P2.print_private_Data();
+
   P3.setup();
+  P3.set_U_m_and_U_b();
+  P3.set_P_m_and_P_b();
   P3.print_private_Data();
   
   All_HX711.add_HX711(&P1);
@@ -54,15 +51,12 @@ void setup() {
   Serial.println("Start");
 }
 
-
-
 void loop() {
   Loop_counter ++;
   Serial.print("\n\nMessung ");
   Serial.print(Loop_counter);
   //Reading Pressure Sensors
 
- 
   /*
   P1.read();
   P2.read();
@@ -80,6 +74,5 @@ void loop() {
   
   // Ausgabe auf der seriellen Konsole
 
-  
   delay(3000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
 }

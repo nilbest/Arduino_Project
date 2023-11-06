@@ -19,7 +19,7 @@ void HX711::setup(){
     //Calls the pinMode 
     pinMode(this->DOUT_PIN, INPUT);
     pinMode(this->SCK_PIN, OUTPUT);
-    set_slope_and_yIntercept();
+    set_U_m_and_U_b();
     Serial.print(this->name+" HX711 finished setup\n");
 }
 
@@ -98,7 +98,7 @@ void HX711::set_pressure_mmHg(){
 };
 
 
-void HX711::set_slope_and_yIntercept(){
+void HX711::set_U_m_and_U_b(){
     this->slope = (this->U_5_8PSI - this->U_1PSI) / (this->P_5_8PSI - this->P_1PSI);
     this->yIntercept = this->U_1PSI - this->slope * this->P_1PSI;
 };
