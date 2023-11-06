@@ -8,7 +8,6 @@ HX711::HX711(String name, int dout, int sck, byte gain, bool switch_sign){
     this->SCK_PIN=sck;
     this->SCALE_FACTOR = 1.0;
     this->OFFSET= 0.0;
-    this->OFFSET_RAW=-80000000;
     this->gain= gain;
     this->switch_sign= switch_sign;
     set_gain(gain);
@@ -86,7 +85,7 @@ void HX711::read() {
    set_voltage();
    set_pressure_mmHg();
    set_pressure_psi();
-   set_pressure_kpa();
+   set_pressure_pa();
 }
 
 //#############################################################
@@ -161,18 +160,14 @@ void HX711::set_voltage(){
 void HX711::set_pressure_psi(){
     float pressure_psi;
     //via Point Kalibration
-    pressure_psi = (this->voltage - 0.5) * (100.0 / 4.0);
-    pressure_psi = (pressure_psi * this->SCALE_FACTOR) + this->OFFSET;
-    //via Linear Interpolation
-    //pressure_psi= (voltage - yIntercept) / slope;
+    pressure_psi = this->pressure_mmHg / 51.715;
     this->pressure_psi=pressure_psi;
 };
 
-void HX711::set_pressure_kpa(){
-    float pressure_kpa;
-    pressure_kpa = this->pressure_psi * 6.89476;
-    pressure_kpa = (pressure_kpa * this->SCALE_FACTOR) + this->OFFSET;
-    this->pressure_kpa=pressure_kpa;
+void HX711::set_pressure_pa(){
+    float pressure_pa;
+    pressure_pa = this->pressure_mmHg * 133.322;
+    this->pressure_pa=pressure_pa;
 };
 
 void HX711::set_pressure_mmHg(){
@@ -186,7 +181,7 @@ void HX711::set_pressure_mmHg(){
     this->pressure_mmHg = pressure_mmHg;
 };
 
-void HX711::set_U_m_and_U_b(float slope = 0 , float yintercept = 0){
+void HX711::set_U_m_and_U_b(float slope /*= 0*/ , float yintercept /*= 0*/){
     this->U_m = slope;
     this->U_b = yintercept;
     /*
@@ -197,7 +192,7 @@ void HX711::set_U_m_and_U_b(float slope = 0 , float yintercept = 0){
     */
 };
 
-void HX711::set_P_m_and_P_b(float slope = 0 , float yintercept = 0){
+void HX711::set_P_m_and_P_b(float slope /*= 0*/ , float yintercept /*= 0*/){
     this->P_m = slope;
     this->P_b = yintercept;
     /*
@@ -261,13 +256,13 @@ void HX711::printTest(){
     Serial.print(" PSI");
 
     Serial.print(", Druck (kPa): ");
-    Serial.print(this->pressure_kpa, 2);
+    Serial.print(this->pressure_pa, 2);
     Serial.println(" kPa");
     */
 };
 
 void HX711::printData(){
-    Serial.print(this->pressure_kpa, 2);
+    Serial.print(this->pressure_pa, 2);
     Serial.print(" kPa");
 };
 
@@ -313,8 +308,14 @@ void HX711::print_private_Data(){
   Serial.println(this->SCK_PIN);
   Serial.print("Offset: ");
   Serial.println(this->OFFSET);
-  Serial.print("Offset_Raw: ");
-  Serial.println(this->OFFSET_RAW);
+  Serial.print("U_m: ");
+  Serial.println(this->U_m);
+  Serial.print("U_b: ");
+  Serial.println(this->U_b);
+  Serial.print("P_m: ");
+  Serial.println(this->P_m);
+  Serial.print("P_b: ");
+  Serial.println(this->P_b);
   Serial.print("Setup Gain: ");
   Serial.println(this->gain);
   Serial.print("Gain Pin Pulse: ");

@@ -50,11 +50,11 @@ void loop() {
   // Beachte, dass dies nur ein Beispiel ist und du deine eigene Kalibrierung durchführen musst.
   float voltage = (rawValue * 5.0) / static_cast<float>(0x7FFFFF);
   float pressure_psi = (voltage - 0.5) * (100.0 / 4.0);
-  float pressure_kpa = pressure_psi * 6.89476;
+  float pressure_pa = pressure_psi * 6.89476;
 
   // Anwenden der Kalibrierungsfaktoren
   pressure_psi = (pressure_psi * SCALE_FACTOR) + OFFSET;
-  pressure_kpa = (pressure_kpa * SCALE_FACTOR) + OFFSET;
+  pressure_pa = (pressure_pa * SCALE_FACTOR) + OFFSET;
 
   // Ausgabe auf der seriellen Konsole
   Serial.print("Rohwert: ");
@@ -69,7 +69,7 @@ void loop() {
   Serial.print(" PSI");
 
   Serial.print(", Druck (kPa): ");
-  Serial.print(pressure_kpa, 2);
+  Serial.print(pressure_pa, 2);
   Serial.println(" kPa");
 
   delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird

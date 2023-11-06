@@ -31,12 +31,11 @@ class HX711
         int gain;
         byte GAIN;
         bool switch_sign;
-        long OFFSET_RAW;    //OFFSET for Nulling HX711
 
         long rawValue;
         float voltage;      
         float pressure_psi;
-        float pressure_kpa;
+        float pressure_pa;
         float pressure_mmHg;
 
         //lineare Interpolation
@@ -73,7 +72,7 @@ class HX711
         void set_P_m_and_P_b(float slope = 0 , float yintercept = 0); // slope = m ; intercept = b
         void set_voltage();
         void set_pressure_psi();
-        void set_pressure_kpa();
+        void set_pressure_pa();
         void set_pressure_mmHg();
         int countDigitsBeforeDecimal(float value);
 

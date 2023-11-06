@@ -59,7 +59,7 @@ void HX711::read() {
    set_voltage();
    set_pressure_mmHg();
    set_pressure_psi();
-   set_pressure_kpa();
+   set_pressure_pa();
    //Serial.println(this->name+" finished Reading");
 }
 
@@ -83,11 +83,11 @@ void HX711::set_pressure_psi(){
     this->pressure_psi=pressure_psi;
 };
 
-void HX711::set_pressure_kpa(){
-    float pressure_kpa;
-    pressure_kpa = this->pressure_psi * 6.89476;
-    pressure_kpa = (pressure_kpa * this->SCALE_FACTOR) + this->OFFSET;
-    this->pressure_kpa=pressure_kpa;
+void HX711::set_pressure_pa(){
+    float pressure_pa;
+    pressure_pa = this->pressure_psi * 6.89476;
+    pressure_pa = (pressure_pa * this->SCALE_FACTOR) + this->OFFSET;
+    this->pressure_pa=pressure_pa;
 };
 
 void HX711::set_pressure_mmHg(){
@@ -153,13 +153,13 @@ void HX711::printTest(){
     Serial.print(" PSI");
 
     Serial.print(", Druck (kPa): ");
-    Serial.print(this->pressure_kpa, 2);
+    Serial.print(this->pressure_pa, 2);
     Serial.println(" kPa");
     */
 };
 
 void HX711::printData(){
-    Serial.print(this->pressure_kpa, 2);
+    Serial.print(this->pressure_pa, 2);
     Serial.print(" kPa");
 };
 

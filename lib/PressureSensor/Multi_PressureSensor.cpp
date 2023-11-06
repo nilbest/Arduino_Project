@@ -128,7 +128,7 @@ void multi_HX711::read(){
             HX711s[i]->set_voltage();
             HX711s[i]->set_pressure_mmHg();
             HX711s[i]->set_pressure_psi();
-            HX711s[i]->set_pressure_kpa();
+            HX711s[i]->set_pressure_pa();
         };
     };
 };
