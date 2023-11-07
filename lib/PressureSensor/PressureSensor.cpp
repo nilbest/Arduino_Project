@@ -173,11 +173,11 @@ void HX711::set_pressure_pa(){
 void HX711::set_pressure_mmHg(){
     float pressure_mmHg;
     pressure_mmHg =  (this->voltage - this->P_b) / this->P_m; //x = (y-b)/m
+
     if (pressure_mmHg <= 0){
         pressure_mmHg = 0.00;
         }
-    //pressure_mmHg = (this->voltage * 4.3237 ) + (-20.655);
-    //pressure_mmHg = (pressure_mmHg * this->SCALE_FACTOR) + this->OFFSET;
+    
     this->pressure_mmHg = pressure_mmHg;
 };
 
@@ -209,7 +209,7 @@ void HX711::set_P_m_and_P_b(float slope /*= 0*/ , float yintercept /*= 0*/){
 
 void HX711::printTest(){
     //Serial.println(this->name);
-    Serial.print("\nRohwert: ");
+    Serial.print("Rohwert: ");
 
     int num_digits = 1; // Mindestens eine Stelle für den Rohwert
 

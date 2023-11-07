@@ -32,8 +32,8 @@ void setup() {
   P2.print_private_Data();
 
   P3.setup();
-  P3.set_U_m_and_U_b();
-  P3.set_P_m_and_P_b();
+  P3.set_U_m_and_U_b(1.1685 , 0.1738);
+  P3.set_P_m_and_P_b(0.2002 , 2.9633);
   P3.print_private_Data();
   
   All_HX711.add_HX711(&P1);
@@ -69,8 +69,8 @@ void loop() {
   */
   
   All_HX711.read();
-  P2.printTest();
-  //All_HX711.printTest();
+  //P1.printTest();
+  All_HX711.printTest();
   
   // Ausgabe auf der seriellen Konsole
 
