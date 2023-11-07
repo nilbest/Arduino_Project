@@ -22,13 +22,13 @@ void setup() {
 
   //Setup Pressure Sensors
   P1.setup();
-  P1.set_U_m_and_U_b(1.1688,0.0989);
-  P1.set_P_m_and_P_b(0.1972,4.0057);
+  P1.set_U_m_and_U_b(1.1688 , 0.0989);
+  P1.set_P_m_and_P_b(0.1972 , 4.0057);
   P1.print_private_Data();
 
   P2.setup();
-  P2.set_U_m_and_U_b();
-  P2.set_P_m_and_P_b();
+  P2.set_U_m_and_U_b(1.1546 , 0.2049);
+  P2.set_P_m_and_P_b(0.2021 , 5.1914);
   P2.print_private_Data();
 
   P3.setup();
