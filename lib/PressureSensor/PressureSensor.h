@@ -83,6 +83,8 @@ class HX711
         void print_Data_Test(uint8_t data[3]);
 };
 
+//_________________All HX711 related Functions with high Memory Usage_________________
 void test_print(HX711* HX711_instance);
+
 
 #endif

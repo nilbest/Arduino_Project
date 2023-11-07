@@ -18,7 +18,6 @@ HX711::HX711(String name, int dout, int sck, byte gain, bool switch_sign){
 HX711::~HX711(){
 }
 
-//#############################################################
 //_________________All User Fuctions___________________
 
 void HX711::setup(){
@@ -88,7 +87,6 @@ void HX711::read() {
    set_pressure_pa();
 }
 
-//#############################################################
 //_________________All Get Fuctions___________________
 
 int HX711::get_Dout_Pin(){
@@ -107,7 +105,6 @@ int HX711::get_SCK_PIN(){
     return this->SCK_PIN;
 };
 
-//#############################################################
 //_________________All Set Fuctions___________________
 
 void HX711::set_SCALE_FACTOR(float new_Scale_Factor){
@@ -203,8 +200,6 @@ void HX711::set_P_m_and_P_b(float slope /*= 0*/ , float yintercept /*= 0*/){
     */
 };
 
-
-//#############################################################
 //_________________All Print Fuctions___________________
 
 void HX711::printTest(){
@@ -335,6 +330,7 @@ uint8_t getFillerValue(uint8_t data) {
     return (data & 0x80) ? 0xFF : 0x00;
 }
 
+//_________________All HX711 related Functions with high Memory Usage_________________
 //Bsp. for outsourcing Print Statements
 void test_print(HX711* HX711_instance){
     Serial.print("\n\nTesting\n");
