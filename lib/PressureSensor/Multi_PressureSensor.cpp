@@ -131,7 +131,6 @@ void multi_HX711::read(){
     };
 };
 
-
 void multi_HX711::set_gain(byte gain = 128){
     switch (gain) {
 		case 128:		// channel A, gain factor 128
@@ -147,7 +146,7 @@ void multi_HX711::set_gain(byte gain = 128){
 };
 
 void multi_HX711::print_multi_HX711(){
-    Serial.println("##############################");
+    Serial.print("\n\n");
     Serial.print("\nSetup Sensor '");
     Serial.print(this->Name);
     Serial.println("'");
@@ -186,28 +185,8 @@ void multi_HX711::print_multi_HX711(){
     Serial.println(this->gain);
     Serial.print("Extra Pulse for Gain: ");
     Serial.println(this->gain);
-    Serial.println("##############################");
+    Serial.println("\n\n");
 };
-
-void multi_HX711::print_Data_Test(uint8_t data[3]) {
-    //Prints all Data in the Data Array
-    //Used for debugging
-
-    unsigned long value = 0;
-    // Ausgabe der Rohdaten im Zweierkomplementformat
-    Serial.print("\nData Array (2's Complement): ");
-    Serial.print(data[2], BIN);
-    Serial.print(" ");
-    Serial.print(data[1], BIN);
-    Serial.print(" ");
-    Serial.println(data[0], BIN);
-    value = (static_cast<unsigned long>(data[2]) << 16
-			| static_cast<unsigned long>(data[1]) << 8
-			| static_cast<unsigned long>(data[0]) );
-    Serial.println(value, BIN);
-    signed long digit = value;
-    Serial.println(digit, DEC);
-}
 
 void multi_HX711::printTest(){
     for (int i = 0; i < Anz_HX711; i++) {
@@ -217,5 +196,4 @@ void multi_HX711::printTest(){
             HX711s[i]->printTest();
         };
     };
-
 };

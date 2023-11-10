@@ -60,7 +60,8 @@ class HX711
         int get_SCK_PIN();
         bool get_SwitchSign();
         String get_Name();
-        float get_voltage(bool Volt = false);
+        long get_rawValue();
+        float get_Voltage(bool Volt = false);
         float get_Pressure_mmHg();
         float get_Pressure_psi();
         float get_Pressure_pa();
@@ -79,14 +80,16 @@ class HX711
         void set_voltage();
         void set_pressure_mmHg();
 
-        //To get smaler RAM Usage make them using pointers and do not add them to each instance!!!
+        
         void printTest();   //Has to be rewritten outside this class
         void print_private_Data();  //Has to be rewritten outside this class
         void print_Data_Test(uint8_t data[3]);  //Has to be rewritten outside this class
 };
 
 //_________________All HX711 related Functions with high Memory Usage_________________
-void test_print(HX711* HX711_instance);
+//Spart keinen Speicher ein!!!
 
+void test_print(HX711* HX711_instance);
+//void print_Test(HX711* HX711_instance);
 
 #endif

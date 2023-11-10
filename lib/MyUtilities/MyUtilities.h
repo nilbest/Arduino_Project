@@ -6,7 +6,7 @@
 
 
 int countDigitsBeforeDecimal(float value, int digits = 10);
-void Serial_print_format_number_spaces(float number , String Start_String = "" , int digits = 4, int decimal_palce = 2, String End_String = "");
+void Serial_print_format_number_spaces(float number , String Start_String = "",String End_String = "", int digits = 4, int decimal_palce = 2);
 
 
 #endif

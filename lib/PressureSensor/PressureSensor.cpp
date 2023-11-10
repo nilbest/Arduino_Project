@@ -100,11 +100,15 @@ String HX711::get_Name(){
     return this->name;
 };
 
+long HX711::get_rawValue(){
+    return this->rawValue;
+};
+
 int HX711::get_SCK_PIN(){
     return this->SCK_PIN;
 };
 
-float HX711::get_voltage(bool Volt /*= false*/){
+float HX711::get_Voltage(bool Volt /*= false*/){
     if (Volt){
         return this->voltage/1000;
     };
@@ -209,64 +213,17 @@ void HX711::set_P_m_and_P_b(float slope /*= 0*/ , float yintercept /*= 0*/){
 
 //_________________All Print Fuctions___________________
 
+
+//Prints Basic Values for calibration
 void HX711::printTest(){
-    //Serial.println(this->name);
-    Serial.print("Rohwert: ");
-
-    int num_digits = 1; // Mindestens eine Stelle für den Rohwert
-
-    // Berechnen Sie die Anzahl der Stellen im Rohwert
-    long tempValue = this->rawValue;
-    if (tempValue < 0) {
-        tempValue = -tempValue; // Negative Werte behandeln
-    };
-
-    while (tempValue >= 10) {
-        tempValue /= 10;
-        num_digits++;
-    };
-
-    // Füllen Sie die verbleibenden Zeichen mit Leerzeichen auf, um rechtsbündige Ausgabe zu erreichen
-    int max_width = 10; // Maximale Breite für die Ausgabe (anpassbar)
-    for (int i = num_digits; i < max_width; i++) {
-        Serial.print(" ");
-    };
-
-    // Ausgabe des Rohwerts
-    Serial.print(this->rawValue, DEC);
-
-    //Serial.print(this->rawValue, DEC);
-    //Serial.println();
-    //Serial.print("\t");
-    
-    Serial.print(", Spannung: ");
-    for ( int i = countDigitsBeforeDecimal(this->voltage) ; i<4;i++){
-        Serial.print(" ");
-    }
-    Serial.print(this->voltage, 2);
-    Serial.print(" mV");
-    
-    Serial.print(", Druck (mmHg): ");
-    for ( int i = countDigitsBeforeDecimal(this->pressure_mmHg) ; i<4;i++){
-        Serial.print(" ");
-    }
-    Serial.print(this->pressure_mmHg, 2);
-    Serial.print(" mmHg");
-    /*
-    Serial.print(", Druck (PSI): ");
-    Serial.print(this->pressure_psi, 2);
-    Serial.print(" PSI");
-
-    Serial.print(", Druck (kPa): ");
-    Serial.print(this->pressure_pa, 2);
-    Serial.println(" kPa");
-    */
+    Serial_print_format_number_spaces(this->rawValue, "Rohwert: "," ", 8,0);
+    Serial_print_format_number_spaces(this->voltage, ", Spannung: ","mV");
+    Serial_print_format_number_spaces(this->pressure_mmHg, ", Druck (mmHg): ","mmHg");
 };
 
+//Prints all Data in the Data Array
+//Used for debugging
 void HX711::print_Data_Test(uint8_t data[3]) {
-    //Prints all Data in the Data Array
-    //Used for debugging
-
     unsigned long value = 0;
     // Ausgabe der Rohdaten im Zweierkomplementformat
     Serial.print("\nData Array (2's Complement): ");
@@ -283,30 +240,31 @@ void HX711::print_Data_Test(uint8_t data[3]) {
     Serial.println(digit, DEC);
 }
 
+//Output all private data
 void HX711::print_private_Data(){
-  Serial.print("\nSetup Sensor '");
-  Serial.print(this->name);
-  Serial.println("'");
-  Serial.print("DOUT-Pin: ");
-  Serial.println(this->DOUT_PIN);
-  Serial.print("SCK-Pin: ");
-  Serial.println(this->SCK_PIN);
-  Serial.print("Offset: ");
-  Serial.println(this->OFFSET);
-  Serial.print("U_m: ");
-  Serial.println(this->U_m);
-  Serial.print("U_b: ");
-  Serial.println(this->U_b);
-  Serial.print("P_m: ");
-  Serial.println(this->P_m);
-  Serial.print("P_b: ");
-  Serial.println(this->P_b);
-  Serial.print("Setup Gain: ");
-  Serial.println(this->gain);
-  Serial.print("Gain Pin Pulse: ");
-  Serial.println(this->GAIN);
-  Serial.print("Switch Sign: ");
-  Serial.println(this->switch_sign);
+    Serial.print("\nSetup Sensor '");
+    Serial.print(this->name);
+    Serial.println("'");
+    Serial.print("DOUT-Pin: ");
+    Serial.println(this->DOUT_PIN);
+    Serial.print("SCK-Pin: ");
+    Serial.println(this->SCK_PIN);
+    Serial.print("Offset: ");
+    Serial.println(this->OFFSET);
+    Serial.print("U_m: ");
+    Serial.println(this->U_m);
+    Serial.print("U_b: ");
+    Serial.println(this->U_b);
+    Serial.print("P_m: ");
+    Serial.println(this->P_m);
+    Serial.print("P_b: ");
+    Serial.println(this->P_b);
+    Serial.print("Setup Gain: ");
+    Serial.println(this->gain);
+    Serial.print("Gain Pin Pulse: ");
+    Serial.println(this->GAIN);
+    Serial.print("Switch Sign: ");
+    Serial.println(this->switch_sign);
 }
 
 uint8_t getFillerValue(uint8_t data) {
@@ -320,11 +278,61 @@ uint8_t getFillerValue(uint8_t data) {
     return (data & 0x80) ? 0xFF : 0x00;
 }
 
+
 //_________________All HX711 related Functions with high Memory Usage_________________
 //Bsp. for outsourcing Print Statements
+
 void test_print(HX711* HX711_instance){
     Serial.print("\n\nTesting\n");
     Serial.print("Name: ");
     Serial.println(HX711_instance->get_Name());
 };
 
+//Macht keinen Unterschied!
+/*
+void print_Test(HX711* HX711_instance){
+    //Serial.println(this->name);
+    Serial.print("Rohwert: ");
+
+    int num_digits = 1; // Mindestens eine Stelle für den Rohwert
+
+    // Berechnen Sie die Anzahl der Stellen im Rohwert
+    long tempValue = HX711_instance->get_rawValue();
+    if (tempValue < 0) {
+        tempValue = -tempValue; // Negative Werte behandeln
+    };
+
+    while (tempValue >= 10) {
+        tempValue /= 10;
+        num_digits++;
+    };
+
+    // Füllen Sie die verbleibenden Zeichen mit Leerzeichen auf, um rechtsbündige Ausgabe zu erreichen
+    int max_width = 10; // Maximale Breite für die Ausgabe (anpassbar)
+    for (int i = num_digits; i < max_width; i++) {
+        Serial.print(" ");
+    };
+
+    // Ausgabe des Rohwerts
+    Serial.print(HX711_instance->get_rawValue(), DEC);
+
+    //Serial.print(this->rawValue, DEC);
+    //Serial.println();
+    //Serial.print("\t");
+    
+    Serial.print(", Spannung: ");
+    for ( int i = countDigitsBeforeDecimal(HX711_instance->get_Voltage()) ; i<4;i++){
+        Serial.print(" ");
+    }
+    Serial.print(HX711_instance->get_Voltage(), 2);
+    Serial.print(" mV");
+    
+    Serial.print(", Druck (mmHg): ");
+    for ( int i = countDigitsBeforeDecimal(HX711_instance->get_Pressure_mmHg()) ; i<4;i++){
+        Serial.print(" ");
+    }
+    Serial.print(HX711_instance->get_Pressure_mmHg(), 2);
+    Serial.print(" mmHg");
+
+};
+*/
