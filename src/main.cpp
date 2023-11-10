@@ -56,20 +56,8 @@ void loop() {
   Serial.print(Loop_counter);
   //Reading Pressure Sensors
 
-  /*
-  P1.read();
-  P2.read();
-  P3.read();
-  Serial.print("\nP1:\n");
-  P1.printTest();
-  Serial.println("\nP2:");
-  P2.printTest();
-  Serial.println("\nP3:");
-  P3.printTest();
-  */
   
   All_HX711.read();
-  //P1.printTest();
   All_HX711.printTest();
   
   // Ausgabe auf der seriellen Konsole

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "PressureSensor.h"
+#include "MyUtilities.h"
 
 HX711::HX711(String name, int dout, int sck, byte gain, bool switch_sign){
     //Safes the HX711 Class with the Pin Config
@@ -83,8 +84,6 @@ void HX711::read() {
    this->rawValue=value;
    set_voltage();
    set_pressure_mmHg();
-   set_pressure_psi();
-   set_pressure_pa();
 }
 
 //_________________All Get Fuctions___________________
@@ -104,6 +103,27 @@ String HX711::get_Name(){
 int HX711::get_SCK_PIN(){
     return this->SCK_PIN;
 };
+
+float HX711::get_voltage(bool Volt /*= false*/){
+    if (Volt){
+        return this->voltage/1000;
+    };
+    return this->voltage;
+};
+
+float HX711::get_Pressure_mmHg(){
+    return this->pressure_mmHg;
+};
+
+float HX711::get_Pressure_psi(){
+    return this->pressure_mmHg / 51.715;
+};
+
+float HX711::get_Pressure_pa(){
+    return this->pressure_mmHg * 133.322;
+};
+
+
 
 //_________________All Set Fuctions___________________
 
@@ -129,7 +149,7 @@ void HX711::set_SCK_PIN(int SCK_PIN){
     Serial.println(this->SCK_PIN);
 };
 
-void HX711::set_gain(byte gain) {
+void HX711::set_gain(byte gain /*= 128*/) {
 	switch (gain) {
 		case 128:		// channel A, gain factor 128
 			this->GAIN = 1;
@@ -144,7 +164,7 @@ void HX711::set_gain(byte gain) {
 };
 
 void HX711::set_voltage(){
-    //4.63V Versorgung
+    //Saves mV in Memory
     float voltage;
     voltage = (this->rawValue/pow(2,24))*(4.91/this->gain)*1000; //for mV *1000
     // (Data - b) / m
@@ -153,19 +173,6 @@ void HX711::set_voltage(){
     } 
     this->voltage= voltage;
 }
-
-void HX711::set_pressure_psi(){
-    float pressure_psi;
-    //via Point Kalibration
-    pressure_psi = this->pressure_mmHg / 51.715;
-    this->pressure_psi=pressure_psi;
-};
-
-void HX711::set_pressure_pa(){
-    float pressure_pa;
-    pressure_pa = this->pressure_mmHg * 133.322;
-    this->pressure_pa=pressure_pa;
-};
 
 void HX711::set_pressure_mmHg(){
     float pressure_mmHg;
@@ -256,23 +263,6 @@ void HX711::printTest(){
     */
 };
 
-void HX711::printData(){
-    Serial.print(this->pressure_pa, 2);
-    Serial.print(" kPa");
-};
-
-int HX711::countDigitsBeforeDecimal(float value){
-    int intValue = (int)value; // Ganzzahliger Teil extrahieren
-    int digitCount = 1; // Mindestens eine Ziffer
-
-    while (intValue >= 10) {
-        intValue /= 10;
-        digitCount++;
-    }
-
-    return digitCount;
-}
-
 void HX711::print_Data_Test(uint8_t data[3]) {
     //Prints all Data in the Data Array
     //Used for debugging
@@ -337,3 +327,4 @@ void test_print(HX711* HX711_instance){
     Serial.print("Name: ");
     Serial.println(HX711_instance->get_Name());
 };
+

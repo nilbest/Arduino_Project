@@ -23,20 +23,18 @@ class multi_HX711
         virtual ~multi_HX711();
 
         void setup_overwrite(); 
-
         void read();
-
         void add_HX711(HX711* hx711Instance);
-
 
         void set_gain(byte gain);
 
         //To get smaler RAM Usage make them using pointers and do not add them to each instance!!!
-        void print_multi_HX711();
-        void print_all_HX711();
-        void print_Data_Test(uint8_t data[3]);
-        void printTest();
+        void print_multi_HX711();   //Has to be rewritten outside this class
+        void print_all_HX711(); //Has to be rewritten outside this class
+        void print_Data_Test(uint8_t data[3]);  //Has to be rewritten outside this class
+        void printTest();   //Has to be rewritten outside this class
 };
+
 
 
 #endif
