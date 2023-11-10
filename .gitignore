@@ -3,3 +3,10 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+#Venv 
+otherinfos/Kalibration/venv/include
+otherinfos/Kalibration/venv/Lib
+otherinfos/Kalibration/venv/Scripts
+otherinfos/Kalibration/venv/pyvenv.cfg
+
