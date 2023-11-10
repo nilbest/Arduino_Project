@@ -3,18 +3,31 @@
 #include "PressureSensor.h"
 #include "Multi_PressureSensor.h"
 
-// Pins am Arduino für HX711
-HX711 P1("P1",11,4,32,true);
-HX711 P2("P2",12,6,32,true);
-HX711 P3("P3",13,8,32,true);
+#include <LiquidCrystal.h>
 
-multi_HX711 All_HX711("All_HX711", 10, 32);
+// Pins am Arduino für HX711
+HX711 P1("P1",4,4,32,true);
+HX711 P2("P2",5,6,32,true);
+HX711 P3("P3",6,8,32,true);
+multi_HX711 All_HX711("All_HX711", 3, 32);
 
 long Loop_counter = 0;
+
+//Setup Display
+const int rs = 8, en = 9, d4 = 10, d5 = 11, d6 = 12, d7 = 13;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
   Serial.begin(115200);
   delay(500);
+
+  //Setup LCD 20x4
+  // set up the LCD's number of columns and rows:
+  lcd.begin(20, 4);
+  // Print a message to the LCD.
+  lcd.print("hello, world!");
+
+
   
   Serial.println("");
   Serial.println("_______Starting Setup for Sensors_______\n");
@@ -61,6 +74,11 @@ void loop() {
   //print_Test(&P1);
   //All_HX711.printTest();
   // Ausgabe auf der seriellen Konsole
+
+
+  // set the cursor to column 0, line 1
+  // (note: line 1 is the second row, since counting begins with 0):
+  lcd.setCursor(0, 1);
 
   delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
 }
