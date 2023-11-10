@@ -4,6 +4,8 @@
 .vscode/launch.json
 .vscode/ipch
 
+/lib/Submodule/
+
 #Venv 
 otherinfos/Kalibration/venv/include
 otherinfos/Kalibration/venv/Lib
