@@ -106,7 +106,7 @@ void loop() {
     Serial.print("\tFl sec: ");
     Serial.print(Sensor.getFlowRate_s());
     Serial.print("\tFlow/min Simple: ");
-    //Serial.print(Sensor.getFlowRate_m_simple());
+    //Serial.print(Sensor.getFlowRate_m_simple()); //Not Shure what I wanted there
     Serial.print("\tLitter: ");
     Serial.println(Sensor.getVolume());
     timebefore = millis();
