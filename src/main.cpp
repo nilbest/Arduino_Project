@@ -101,7 +101,7 @@ void loop() {
   lcd.print(Format_number_spaces(P2.get_Pressure_mmHg(),"","",3,1,true)); //Error with exact number of Digits
   lcd.setCursor(11,1);
   lcd.print(Format_number_spaces(P3.get_Pressure_mmHg(),"","",3,0,true));
-
+  //--
 
 
   delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
