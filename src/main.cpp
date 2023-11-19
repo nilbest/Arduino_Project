@@ -14,11 +14,13 @@ HX711 P3("P3",13,8,32,true);
 multi_HX711 All_HX711("All_HX711", 10, 32);
 
 
-
 // pin -> interrupt pin
 FlowSensor Sensor(YFS201, 2); //2=>D2
 unsigned long timebefore = 0; // Same type as millis()
 
+// pin -> interrupt pin
+FlowSensor Sensor(YFS201, 2); //2=>D2
+unsigned long timebefore = 0; // Same type as millis()
 
 void count(){
   Sensor.count();
