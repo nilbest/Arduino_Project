@@ -216,9 +216,9 @@ void HX711::set_P_m_and_P_b(float slope /*= 0*/ , float yintercept /*= 0*/){
 
 //Prints Basic Values for calibration
 void HX711::printTest(){
-    Serial_print_format_number_spaces(this->rawValue, "Rohwert: "," ", 8,0);
-    Serial_print_format_number_spaces(this->voltage, ", Spannung: ","mV");
-    Serial_print_format_number_spaces(this->pressure_mmHg, ", Druck (mmHg): ","mmHg");
+    Serial_print_format_number_spaces(this->rawValue, "Rohwert: ","", 8,0);
+    Serial_print_format_number_spaces(this->voltage, "\t, Spannung: ","mV");
+    Serial_print_format_number_spaces(this->pressure_mmHg, "\t, Druck: ","mmHg");
 };
 
 //Prints all Data in the Data Array

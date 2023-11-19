@@ -18,10 +18,6 @@ multi_HX711 All_HX711("All_HX711", 10, 32);
 FlowSensor Sensor(YFS201, 2); //2=>D2
 unsigned long timebefore = 0; // Same type as millis()
 
-// pin -> interrupt pin
-FlowSensor Sensor(YFS201, 2); //2=>D2
-unsigned long timebefore = 0; // Same type as millis()
-
 void count(){
   Sensor.count();
 }
@@ -90,33 +86,36 @@ void setup() {
 void loop() {
   Loop_counter ++;
   Serial.print("\n\nMessung ");
-  Serial.print(Loop_counter);
+  Serial.println(Loop_counter);
   //Reading Pressure Sensors
+  All_HX711.read();
+  
 
-  // put your main code here, to run repeatedly:
-    if (millis() - timebefore >= 1000) //1000 = 1sec
-  {
-    Sensor.read();// calibrate = Number in read() [_numpuls+calibrate]
-    Serial.print("Flow (L/min) : ");
-    Serial.print(Sensor.getFlowRate_m());
-    Serial.print("\tAll Puls count: ");
+  if (millis() - timebefore >= 1000){
+    Sensor.read();
+    Serial_print_format_number_spaces(Sensor.getPulse(), "Puls count:","", 8,0);
+    Serial_print_format_number_spaces(Sensor.getFlowRate_m(), "\t, Flow 1: ","L/min");
+    Serial_print_format_number_spaces(Sensor.getFlowRate_s(), "\t, Flow 2: ","L/sec");
+    Serial_print_format_number_spaces(Sensor.getVolume(),"\t, Volume: ","L");
+    /*
+    // calibrate = Number in read() [_numpuls+calibrate]
+    Serial.print("\nFlow (L/min): ");
+    Serial.print(Format_number_spaces(Sensor.getFlowRate_m(),"","",4,2,false));
+    Serial.print("\t, All Puls count: ");
     Serial.print(Sensor.getPulse());
-    /*Serial.print("\t\tMillis: ");
-    Serial.print(millis());
-    Serial.print("\tTime Before: ");
-    Serial.print(timebefore);*/
+    //Serial.print("\t\tMillis: ");
+    //Serial.print(millis());
+    //Serial.print("\tTime Before: ");
+    //Serial.print(timebefore);
     Serial.print("\tFl sec: ");
     Serial.print(Sensor.getFlowRate_s());
-    /*Serial.print("\tFlow/min Simple: ");
-    Serial.print(Sensor.getFlowRate_m_simple());*/
     Serial.print("\tLitter: ");
-    Serial.println(Sensor.getVolume());
+    Serial.print(Sensor.getVolume());
+    */
     timebefore = millis();
   }
 
-
   
-  All_HX711.read();
   All_HX711.printTest();
   //print_Test(&P1);
   //All_HX711.printTest();
@@ -133,15 +132,13 @@ void loop() {
   lcd.setCursor(8, 1);
   lcd.print("P3:");
   lcd.setCursor(3,0);
-  //lcd.print(get.Flow());
+  lcd.print(Format_number_spaces(Sensor.getFlowRate_m(),"","",3,0,true));
   lcd.setCursor(11,0);
   lcd.print(Format_number_spaces(P1.get_Pressure_mmHg(),"","",3,0,true));
   lcd.setCursor(3,1);
-  lcd.print(Format_number_spaces(P2.get_Pressure_mmHg(),"","",3,1,true)); //Error with exact number of Digits
+  lcd.print(Format_number_spaces(P2.get_Pressure_mmHg(),"","",3,0,true)); //Error with exact number of Digits
   lcd.setCursor(11,1);
   lcd.print(Format_number_spaces(P3.get_Pressure_mmHg(),"","",3,0,true));
-  //--
-
 
   delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
 }
