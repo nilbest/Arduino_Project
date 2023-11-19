@@ -35,12 +35,41 @@ String Format_number_spaces(float number, String Start_String /*= ""*/ , String 
     }
     Value += Spaces;
     if (round_num){
-        Value += round(number);
-    }
-    else{
+        if (decimal_place < 1){
+
+            Value += round_to_int(number);
+        }else{
+            Value += round_to_float(number, decimal_place);
+        }
+    }else{
         Value += number;
     }
     Value += End_String;
     return Value;
+};
 
+//Rounds Float to wished float decimal_place
+//Known Error when number does not have lots of digits
+float round_to_float(float number, int round_to_decimal_place){
+
+    int int_num = round(number * pow(10,round_to_decimal_place));
+
+    float rounded_num = int_num / pow(10,round_to_decimal_place);
+    
+    Serial.print("\nTest Numers: ");
+    Serial.print(number);
+    Serial.print(" Round To: ");
+    Serial.print(round_to_decimal_place);
+    Serial.print("  ");
+    Serial.print(int_num);
+    Serial.print("  ");
+    Serial.print(pow(10,round_to_decimal_place));
+    Serial.print("  ");
+    Serial.println(rounded_num);
+    return rounded_num;
+};
+
+//Rounds Number to int
+int round_to_int(float number){
+    return round(number);
 };
