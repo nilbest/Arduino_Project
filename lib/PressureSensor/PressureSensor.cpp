@@ -200,7 +200,7 @@ void HX711::set_U_m_and_U_b(float slope /*= 0*/ , float yintercept /*= 0*/){
     */
 };
 
-void HX711::set_P_m_and_P_b(float slope /*= 0*/ , float yintercept /*= 0*/){
+void HX711::set_P_m_and_P_b(float slope /*= 1*/ , float yintercept /*= 0*/){
     this->P_m = slope;
     this->P_b = yintercept;
     /*

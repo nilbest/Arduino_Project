@@ -76,7 +76,7 @@ class HX711
 
         //Interne Funktionen
         void set_U_m_and_U_b(float slope = 0 , float yintercept = 0); // slope = m ; intercept = b
-        void set_P_m_and_P_b(float slope = 0 , float yintercept = 0); // slope = m ; intercept = b
+        void set_P_m_and_P_b(float slope = 1 , float yintercept = 0); // slope = m ; intercept = b
         void set_voltage();
         void set_pressure_mmHg();
 
