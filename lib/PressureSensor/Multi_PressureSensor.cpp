@@ -66,8 +66,6 @@ void multi_HX711::read(){
     uint8_t filler_S2 = 0x00;
     uint8_t filler_S3 = 0x00;
 
-
-    
     //Loop through all HX711 and checks if they are ready
     for (int i = 0; i < Anz_HX711; i++) {
         if (HX711s[i] != nullptr) {
