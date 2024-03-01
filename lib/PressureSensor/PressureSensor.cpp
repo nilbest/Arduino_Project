@@ -28,7 +28,6 @@ void HX711::setup(){
     Serial.print(this->name+" finished setup\n");
 }
 
-
 void HX711::read() {
   long value = 0;
   uint8_t data[3] = {0};
@@ -49,11 +48,6 @@ void HX711::read() {
     }
   }
 
-  //Debug Print Pulse counts
-  //Serial.print("\nAnz. Pulse in Loop: ");
-  //Serial.println(count_Pulse);
-  //print_Data_Test(data);
-
   // Zusätzliche SCK-Impulse entsprechend dem ausgewählten Gain hinzufügen
   for (int i = 0; i < this->GAIN; i++) {
     digitalWrite(this->SCK_PIN, HIGH);
@@ -61,11 +55,7 @@ void HX711::read() {
     count_Pulse++;
   }
 
-  //Debug Print Pulse counts
-  //Serial.print("\nAnz. Pulse all: ");
-  //Serial.println(count_Pulse);
-
-// Replicate the most significant bit to pad out a 32-bit signed integer
+    // Replicate the most significant bit to pad out a 32-bit signed integer
 	if (data[2] & 0x80) {
 		filler = 0xFF;
 	} else {
@@ -126,8 +116,6 @@ float HX711::get_Pressure_psi(){
 float HX711::get_Pressure_pa(){
     return this->pressure_mmHg * 133.322;
 };
-
-
 
 //_________________All Set Fuctions___________________
 
@@ -192,27 +180,14 @@ void HX711::set_pressure_mmHg(){
 void HX711::set_U_m_and_U_b(float slope /*= 0*/ , float yintercept /*= 0*/){
     this->U_m = slope;
     this->U_b = yintercept;
-    /*
-    Serial.print("\nslope: ");
-    Serial.print(this->U_m);
-    Serial.print("\t intercept: ");
-    Serial.println(this->U_b);
-    */
 };
 
 void HX711::set_P_m_and_P_b(float slope /*= 1*/ , float yintercept /*= 0*/){
     this->P_m = slope;
     this->P_b = yintercept;
-    /*
-    Serial.print("\nslope: ");
-    Serial.print(this->P_m);
-    Serial.print("\t intercept: ");
-    Serial.println(this->P_b);
-    */
 };
 
 //_________________All Print Fuctions___________________
-
 
 //Prints Basic Values for calibration
 void HX711::printTest(){
@@ -269,70 +244,14 @@ void HX711::print_private_Data(){
 
 uint8_t getFillerValue(uint8_t data) {
   // Replicate the most significant bit to pad out a 32-bit signed integer
-	/*if (data & 0x80) {
-		return (0xFF);
-	} else {
-		return (0x00);
-	};
-  */
     return (data & 0x80) ? 0xFF : 0x00;
 }
 
 
 //_________________All HX711 related Functions with high Memory Usage_________________
-//Bsp. for outsourcing Print Statements
-
+//Bsp. for outsourcing Print Statements (Macht aber keinen Unterschied, Compiler optimiert schon)
 void test_print(HX711* HX711_instance){
     Serial.print("\n\nTesting\n");
     Serial.print("Name: ");
     Serial.println(HX711_instance->get_Name());
 };
-
-//Macht keinen Unterschied!
-/*
-void print_Test(HX711* HX711_instance){
-    //Serial.println(this->name);
-    Serial.print("Rohwert: ");
-
-    int num_digits = 1; // Mindestens eine Stelle für den Rohwert
-
-    // Berechnen Sie die Anzahl der Stellen im Rohwert
-    long tempValue = HX711_instance->get_rawValue();
-    if (tempValue < 0) {
-        tempValue = -tempValue; // Negative Werte behandeln
-    };
-
-    while (tempValue >= 10) {
-        tempValue /= 10;
-        num_digits++;
-    };
-
-    // Füllen Sie die verbleibenden Zeichen mit Leerzeichen auf, um rechtsbündige Ausgabe zu erreichen
-    int max_width = 10; // Maximale Breite für die Ausgabe (anpassbar)
-    for (int i = num_digits; i < max_width; i++) {
-        Serial.print(" ");
-    };
-
-    // Ausgabe des Rohwerts
-    Serial.print(HX711_instance->get_rawValue(), DEC);
-
-    //Serial.print(this->rawValue, DEC);
-    //Serial.println();
-    //Serial.print("\t");
-    
-    Serial.print(", Spannung: ");
-    for ( int i = countDigitsBeforeDecimal(HX711_instance->get_Voltage()) ; i<4;i++){
-        Serial.print(" ");
-    }
-    Serial.print(HX711_instance->get_Voltage(), 2);
-    Serial.print(" mV");
-    
-    Serial.print(", Druck (mmHg): ");
-    for ( int i = countDigitsBeforeDecimal(HX711_instance->get_Pressure_mmHg()) ; i<4;i++){
-        Serial.print(" ");
-    }
-    Serial.print(HX711_instance->get_Pressure_mmHg(), 2);
-    Serial.print(" mmHg");
-
-};
-*/

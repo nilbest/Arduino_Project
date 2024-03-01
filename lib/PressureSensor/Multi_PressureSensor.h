@@ -16,8 +16,6 @@ class multi_HX711
         int Shared_SCK_PIN;// SCK pin for all HX711 devices
         int gain;
         byte GAIN;
-
-
     public:
         multi_HX711(String name,int Shared_SCK_PIN, int gain = 128);
         virtual ~multi_HX711();

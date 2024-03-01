@@ -43,7 +43,7 @@ void multi_HX711::setup_overwrite(){
 };
 
 void multi_HX711::read(){
-    //Please check if the value and data instances match Anz_HX711
+    //check if the value and data instances match Anz_HX711
     /*
     Also this function is only programmed for 3 Sensor instances if you need you have to change:
     - Anz_HX711 in the Header file
@@ -54,7 +54,6 @@ void multi_HX711::read(){
     - add if (data_S[2] & ....
     - add value_S = ( static_cast ...
     */
-
     long value_S1 = 0;
     long value_S2 = 0;
     long value_S3 = 0;
