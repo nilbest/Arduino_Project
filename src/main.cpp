@@ -14,13 +14,13 @@ HX711 P3("P3",13,8,32,true);
 multi_HX711 All_HX711("All_HX711", 10, 32);
 
 // Setup FlowSensor (pin -> interrupt pin)
-FlowSensor Sensor(YFS201, 2); //2=>D2
+FlowSensor F1(YFS201, 2); //2=>D2
 unsigned long timebefore = 0; // Same type as millis()
 void count(){
-  Sensor.count();
+  F1.count();
 }
 
-long Loop_counter = 0;
+long Loop_counter = 0; //Only for Debugging
 
 //LCD variable setup
 //const int rs = 8, en = 9, d4 = 10, d5 = 11, d6 = 12, d7 = 13;
@@ -35,17 +35,15 @@ void setup() {
   //Setup LCD
   lcd.begin(16, 2);
   // Print a message to the LCD.
-  lcd.print("Fl:");
-  lcd.setCursor(8, 0);
-  lcd.print("P1:");
+  lcd.print("Welcome");
   lcd.setCursor(0, 1);
-  lcd.print("P2:");
-  lcd.setCursor(8, 1);
-  lcd.print("P3:");
-  Serial.println("");
+  lcd.print("Booting up");
 
+  Serial.println("");
   Serial.println("_______Starting Setup for Sensors_______\n");
   delay(500);
+  lcd.setCursor(12, 1);
+  lcd.print(".");
 
   //Setup Pressure Sensors
   P1.setup();
@@ -57,6 +55,9 @@ void setup() {
   P3.setup();
   P3.set_U_m_and_U_b(1.1685 , 0.1738);
   P3.set_P_m_and_P_b(0.2002 , 2.9633);
+  delay(500);
+  lcd.setCursor(13, 1);
+  lcd.print(".");
   All_HX711.add_HX711(&P1);
   All_HX711.add_HX711(&P2);
   All_HX711.add_HX711(&P3);
@@ -65,37 +66,35 @@ void setup() {
   
   Serial.println("\n___________Finished Setup for Pressure Sensors__________");
   Serial.println("\n\n\n");
+
   delay(500);
+  lcd.setCursor(14, 1);
+  lcd.print(".");
 
   Serial.print("________Start________");
-  //Flow Sensor
-  Sensor.begin(count);
+  //F1 start
+  F1.begin(count);
 }
 
 void loop() {
   //Loop Counter for Debugging
-  /*
   Loop_counter ++;
   Serial.print("\n\nMessung ");
   Serial.println(Loop_counter);
-  */
+ 
+  //Reading Flow Sensor
+  F1.read();
+
   //Reading Pressure Sensors
   All_HX711.read();
-  
-  if (millis() - timebefore >= 1000){
-    Sensor.read();
-    //Print Infos to Serial Flow Sensor Test Data
-    /*
-    Serial_print_format_number_spaces(Sensor.getPulse(), "Puls count:","", 8,0);
-    Serial_print_format_number_spaces(Sensor.getFlowRate_m(), "\t, Flow 1: ","L/min");
-    Serial_print_format_number_spaces(Sensor.getFlowRate_s(), "\t, Flow 2: ","L/sec");
-    Serial_print_format_number_spaces(Sensor.getVolume(),"\t, Volume: ","L");
-    */
-    timebefore = millis();
-  }
 
+  //Print Infos to Serial Flow F1 Test Data
+  Serial_print_format_number_spaces(F1.getPulse(), "Puls count:","", 8,0);
+  Serial_print_format_number_spaces(F1.getFlowRate_m(), "\t, Flow 1: ","L/min");
+  Serial_print_format_number_spaces(F1.getFlowRate_s(), "\t, Flow 2: ","L/sec");
+  Serial_print_format_number_spaces(F1.getVolume(),"\t, Volume: ","L");
   //Serial print All_HX711 Test Data
-  //All_HX711.printTest();
+  All_HX711.printTest();
 
   //Print Infos to Screen
   lcd.clear();
@@ -107,7 +106,7 @@ void loop() {
   lcd.setCursor(8, 1);
   lcd.print("P3:");
   lcd.setCursor(3,0);
-  lcd.print(Format_number_spaces(Sensor.getFlowRate_m(),"","",3,0,true));
+  lcd.print(Format_number_spaces(F1.getFlowRate_m(),"","",3,0,true));
   lcd.setCursor(11,0);
   lcd.print(Format_number_spaces(P1.get_Pressure_mmHg(),"","",3,1,true));
   lcd.setCursor(3,1);
@@ -115,7 +114,7 @@ void loop() {
   lcd.setCursor(11,1);
   lcd.print(Format_number_spaces(P3.get_Pressure_mmHg(),"","",3,1,true));
 
-  delay(1000);  // Eine Sekunde warten, bevor die nächste Messung durchgeführt wird
+  delay(1000);  // Timing of the loop for refreshing the screen and reading sensor data
 }
 
 
